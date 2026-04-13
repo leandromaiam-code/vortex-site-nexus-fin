@@ -1,81 +1,107 @@
-import type { Metadata } from 'next';
-import Script from 'next/script';
-import { Providers } from '@/app/providers';
-import './globals.css';
+import type { Metadata, Viewport } from "next";
+import "./globals.css";
+import { Inter, Space_Grotesk } from "next/font/google";
+import Script from "next/script";
+import { Analytics } from "@/components/analytics/Analytics";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://knexo.com';
-const ga4 = process.env.NEXT_PUBLIC_GA4_ID;
-const gtm = process.env.NEXT_PUBLIC_GTM_ID;
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space",
+  display: "swap",
+});
+
+export const viewport: Viewport = {
+  themeColor: "#0A0A23",
+  colorScheme: "dark",
+  width: "device-width",
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: 'kNexo — AI budgeting on WhatsApp',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://knexo.com"),
+  title: {
+    default: "kNexo — AI Budgeting on WhatsApp | Join the Waitlist",
+    template: "%s | kNexo",
+  },
   description:
-    'Track spending by texting on WhatsApp. Get proactive AI insights, missions, XP, and shared budgets for couples & families.',
+    "Track spending by messaging on WhatsApp. Get proactive AI insights, missions, XP, and rewards — solo or with your partner/family. Join the kNexo waitlist.",
+  applicationName: "kNexo",
   openGraph: {
-    title: 'kNexo — AI budgeting on WhatsApp',
+    type: "website",
+    siteName: "kNexo",
+    title: "kNexo — AI Budgeting on WhatsApp | Join the Waitlist",
     description:
-      'Track spending by texting on WhatsApp. Get proactive AI insights, missions, XP, and shared budgets for couples & families.',
-    url: siteUrl,
-    siteName: 'kNexo',
-    images: [{ url: '/og/knexo-og.png', width: 1200, height: 630, alt: 'kNexo' }],
-    locale: 'en_US',
-    type: 'website',
+      "WhatsApp-first AI budgeting + real gamification + shared family finances. Join the waitlist.",
+    url: "/",
+    images: [{ url: "/og/knexo-og.png", width: 1200, height: 630, alt: "kNexo" }],
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'kNexo — AI budgeting on WhatsApp',
+    card: "summary_large_image",
+    title: "kNexo — AI Budgeting on WhatsApp",
     description:
-      'Track spending by texting on WhatsApp. Get proactive AI insights, missions, XP, and shared budgets for couples & families.',
-    images: ['/og/knexo-og.png'],
+      "Text your spending on WhatsApp. Get AI insights, missions, XP, and rewards. Join the waitlist.",
+    images: ["/og/knexo-og.png"],
   },
   icons: {
-    icon: '/favicon.ico',
+    icon: "/favicon.ico",
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const gaId = process.env.NEXT_PUBLIC_GA4_ID;
+  const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
+
   return (
-    <html lang="en" className="dark">
-      <body className="min-h-screen bg-[#0A0A23] text-white antialiased">
-        {/* Google Tag Manager */}
-        {gtm ? (
-          <Script id="gtm" strategy="afterInteractive">
-            {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} dark`}>
+      <body className="min-h-dvh bg-[#0A0A23] text-white antialiased selection:bg-[#6C5CE7]/40 selection:text-white">
+        {/* Google Tag Manager (head) */}
+        {gtmId ? (
+          <Script id="gtm-head" strategy="afterInteractive">
+            {`
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
               new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
               j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-              })(window,document,'script','dataLayer','${gtm}');`}
+              })(window,document,'script','dataLayer','${gtmId}');
+            `}
           </Script>
         ) : null}
 
-        {/* GA4 */}
-        {ga4 ? (
+        {/* Google Analytics 4 */}
+        {gaId ? (
           <>
-            <Script src={`https://www.googletagmanager.com/gtag/js?id=${ga4}`} strategy="afterInteractive" />
+            <Script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} strategy="afterInteractive" />
             <Script id="ga4" strategy="afterInteractive">
-              {`window.dataLayer = window.dataLayer || [];
+              {`
+                window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
-                window.gtag = gtag;
                 gtag('js', new Date());
-                gtag('config', '${ga4}', { anonymize_ip: true });`}
+                gtag('config', '${gaId}', { anonymize_ip: true });
+              `}
             </Script>
           </>
         ) : null}
 
-        {/* GTM noscript */}
-        {gtm ? (
+        {/* Google Tag Manager (noscript) */}
+        {gtmId ? (
           <noscript>
             <iframe
-              src={`https://www.googletagmanager.com/ns.html?id=${gtm}`}
+              src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
               height="0"
               width="0"
-              style={{ display: 'none', visibility: 'hidden' }}
+              style={{ display: "none", visibility: "hidden" }}
             />
           </noscript>
         ) : null}
 
-        <Providers>{children}</Providers>
+        <Analytics />
+        {children}
       </body>
     </html>
   );

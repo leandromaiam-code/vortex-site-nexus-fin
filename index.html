@@ -10,538 +10,50 @@
   </style>
 </head>
 <body class="bg-white min-h-screen">
-NEXT_PUBLIC_SITE_URL=https://knexo.com
-
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
-
-# Analytics
-NEXT_PUBLIC_GA4_ID=G-XXXXXXXXXX
-NEXT_PUBLIC_GTM_ID=GTM-XXXXXXX
-
-'use client';
-
-
-
-
-type Variant = 'primary' | 'secondary' | 'outline';
-
-const variants: Record<Variant, string> = {
-  primary:
-    'bg-gradient-to-r from-[#6C5CE7] via-[#8B7BFF] to-[#00D2D3] text-white shadow-[0_0_0_1px_rgba(255,255,255,0.12),0_10px_30px_rgba(108,92,231,0.28)] hover:shadow-[0_0_0_1px_rgba(255,255,255,0.16),0_14px_40px_rgba(0,210,211,0.22)]',
-  secondary:
-    'bg-white/10 text-white shadow-[0_0_0_1px_rgba(255,255,255,0.14)] hover:bg-white/14',
-  outline:
-    'bg-transparent text-white shadow-[0_0_0_1px_rgba(255,255,255,0.18)] hover:bg-white/8',
-};
-
-
-  children,
-  variant = 'primary',
-  href,
-  onClick,
-  eventName = 'cta_click',
-  eventParams,
-  className = '',
-  ariaLabel,
-  type = 'button',
-  disabled,
-}: {
-  children: React.ReactNode;
-  variant?: Variant;
-  href?: string;
-  onClick?: () => void;
-  eventName?: string;
-  eventParams?: Record<string, any>;
-  className?: string;
-  ariaLabel?: string;
-  type?: 'button' | 'submit';
-  disabled?: boolean;
-}) {
-  const base =
-    'inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold tracking-tight transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00D2D3]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A23] disabled:opacity-60 disabled:cursor-not-allowed';
-
-  const handleClick = () => {
-    trackEvent(eventName, {
-      ...eventParams,
-      label: typeof children === 'string' ? children : 'cta',
-      href,
-    });
-    onClick?.();
-  };
-
-  if (href) {
-    return (
-      <a
-        href={href}
-        onClick={handleClick}
-        aria-label={ariaLabel}
-        class=${base} ${variants[variant]} ${className}
-      >
-        {children}
-      </a>
-    );
-
-  return (
-    <button
-      type={type}
-      onClick={handleClick}
-      aria-label={ariaLabel}
-      class=${base} ${variants[variant]} ${className}
-      disabled={disabled}
-    >
-      {children}
-    </button>
-  );
-}
-
-<header class="sticky top-0 z-50 border-b border-white/10 bg-[#0A0A23]/70 backdrop-blur supports-[backdrop-filter]:bg-[#0A0A23]/60">
-      <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 md:px-6">
-        <a href="/" class="flex items-center gap-3" aria-label="kNexo home">
-          <Logo class="h-8 w-auto" />
-        </a>
-
-        <nav class="hidden items-center gap-6 md:flex" aria-label="Primary">
-          {navLinks.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              class="text-sm font-medium text-white/80 hover:text-white transition-colors"
-            >
-              {l.label}
-            </a>
-          ))}
-          <CTAButton href={ctaHref} variant="primary" eventParams={{ location: 'navbar' }}>
-            Join the waitlist
-          </CTAButton>
-        </nav>
-
-        <button
-          type="button"
-          class="md:hidden inline-flex items-center justify-center rounded-lg p-2 text-white/80 hover:text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00D2D3]/70"
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span class="sr-only">Menu</span>
-          <div class="h-5 w-5">
-            <div class=h-0.5 w-5 bg-current transition-all ${open ? 'translate-y-2 rotate-45' : ''} />
-            <div class=mt-1.5 h-0.5 w-5 bg-current transition-all ${open ? 'opacity-0' : ''} />
-            <div class=mt-1.5 h-0.5 w-5 bg-current transition-all ${open ? '-translate-y-2 -rotate-45' : ''} />
-          </div>
-        </button>
-      </div>
-
-      {open && (
-        <div class="md:hidden border-t border-white/10">
-          <div class="mx-auto max-w-6xl px-4 py-4 space-y-3">
-            {navLinks.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                class="block rounded-lg px-3 py-2 text-sm font-medium text-white/85 hover:text-white hover:bg-white/10"
-                onClick={() => setOpen(false)}
-              >
-                {l.label}
-              </a>
-            ))}
-            <CTAButton
-              href={ctaHref}
-              variant="primary"
-              class="w-full"
-              eventParams={{ location: 'mobile_nav' }}
-            >
-              Join the waitlist
-            </CTAButton>
-          </div>
-        </div>
-      )}
-    </header>
-
-<footer class="border-t border-white/10 bg-[#0A0A23]">
-      <div class="mx-auto max-w-6xl px-4 py-10 md:px-6">
-        <div class="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
-          <div class="space-y-3">
-            <a href="/" aria-label="kNexo home" class="inline-flex items-center gap-3">
-              <Logo class="h-8 w-auto" />
-            </a>
-            <p class="max-w-sm text-sm text-white/70">
-              AI budgeting on WhatsApp — with real gamification and shared family finances.
-            </p>
-          </div>
-
-          <div class="grid grid-cols-2 gap-8 md:grid-cols-3">
-            <div class="space-y-2">
-              <div class="text-sm font-semibold text-white">Product</div>
-              <a class="block text-sm text-white/70 hover:text-white" href="/whatsapp-expense-tracker">
-                WhatsApp tracker
-              </a>
-              <a class="block text-sm text-white/70 hover:text-white" href="/gamified-budgeting">
-                Gamification
-              </a>
-              <a class="block text-sm text-white/70 hover:text-white" href="/ai-money-coach">
-                AI Coach
-              </a>
-            </div>
-
-            <div class="space-y-2">
-              <div class="text-sm font-semibold text-white">Use cases</div>
-              <a class="block text-sm text-white/70 hover:text-white" href="/couples-families">
-                Couples & Families
-              </a>
-              <a class="block text-sm text-white/70 hover:text-white" href="/">
-                AI budgeting app
-              </a>
-            </div>
-
-            <div class="space-y-2">
-              <div class="text-sm font-semibold text-white">Legal</div>
-              <a class="block text-sm text-white/70 hover:text-white" href="/privacy">
-                Privacy
-              </a>
-              <a class="block text-sm text-white/70 hover:text-white" href="/terms">
-                Terms
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="mt-10 flex flex-col gap-4 border-t border-white/10 pt-6 md:flex-row md:items-center md:justify-between">
-          <p class="text-xs text-white/55">© {new Date().getFullYear()} Nexus Fin (kNexo). All rights reserved.</p>
-          <div class="flex items-center gap-3">
-            <a
-              href="https://x.com"
-              target="_blank"
-              rel="noreferrer"
-              class="text-xs text-white/60 hover:text-white"
-            >
-              X
-            </a>
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noreferrer"
-              class="text-xs text-white/60 hover:text-white"
-            >
-              Instagram
-            </a>
-            <a
-              href="mailto:hello@knexo.com"
-              class="text-xs text-white/60 hover:text-white"
-            >
-              hello@knexo.com
-            </a>
-          </div>
-        </div>
-      </div>
-    </footer>
-
-<svg
-      class={className}
-      viewBox="0 0 720 140"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      role="img"
-      aria-label="kNexo"
-    >
-      <defs>
-        <linearGradient id="gP" x1="18" y1="18" x2="122" y2="122" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#8B7BFF" />
-          <stop offset="0.55" stopColor="#6C5CE7" />
-          <stop offset="1" stopColor="#00D2D3" />
-        </linearGradient>
-        <linearGradient id="gA" x1="72" y1="26" x2="120" y2="96" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#FECA57" />
-          <stop offset="1" stopColor="#FF9F43" />
-        </linearGradient>
-        <linearGradient id="gW" x1="180" y1="28" x2="700" y2="112" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#F2F0FF" />
-          <stop offset="0.5" stopColor="#FFFFFF" />
-          <stop offset="1" stopColor="#D6FFFF" />
-        </linearGradient>
-      </defs>
-
-      <g>
-        <rect x="18" y="18" width="104" height="104" rx="28" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.14)" />
-        <path
-          d="M46 76c0-17.673 14.327-32 32-32h16c8.837 0 16 7.163 16 16 0 8.837-7.163 16-16 16H78c-8.837 0-16 7.163-16 16 0 8.837 7.163 16 16 16h20"
-          stroke="url(#gP)"
-          strokeWidth="14"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M98 64c0 17.673-14.327 32-32 32H50c-8.837 0-16-7.163-16-16 0-8.837 7.163-16 16-16h16c8.837 0 16-7.163 16-16 0-8.837-7.163-16-16-16H46"
-          stroke="url(#gP)"
-          strokeWidth="14"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity="0.95"
-        />
-        <circle cx="106" cy="42" r="8.5" fill="url(#gA)" />
-      </g>
-
-      <g>
-        <text
-          x="150"
-          y="92"
-          fill="url(#gW)"
-          fontSize="58"
-          fontFamily="Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial"
-          fontWeight="800"
-          letterSpacing="-1.2"
-        >
-          kNexo
-        </text>
-        <text
-          x="152"
-          y="112"
-          fill="rgba(207,251,251,0.75)"
-          fontSize="14"
-          fontFamily="Inter, system-ui"
-          fontWeight="500"
-        >
-          AI budgeting on WhatsApp
-        </text>
-      </g>
-    </svg>
-
-export const supabaseConfig = {
-  url: process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  anonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-};
-
-
-  if (!supabaseConfig.url || !supabaseConfig.anonKey) {
-    throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY');
-
-}
-
-declare global {
-  interface Window {
-    dataLayer?: any[];
-    gtag?: (...args: any[]) => void;
-
-}
-
-
-  if (typeof window === 'undefined') return;
-
-  // GA4
-  if (typeof window.gtag === 'function') {
-    window.gtag('event', name, params);
-  }
-
-  // GTM
-  window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({
-    event: name,
-    ...params,
-  });
-}
-
-export function trackScrollDepth() {
-  if (typeof window === 'undefined') return;
-
-  const sent = new Set<number>();
-  const marks = [25, 50, 75, 90];
-
-  const handler = () => {
-    const doc = document.documentElement;
-    const scrollTop = window.scrollY || doc.scrollTop;
-    const height = doc.scrollHeight - window.innerHeight;
-    if (height <= 0) return;
-
-    const pct = Math.round((scrollTop / height) * 100);
-
-    for (const m of marks) {
-      if (pct >= m && !sent.has(m)) {
-        sent.add(m);
-        trackEvent('page_scroll_depth', { depth: m });
-      }
-    }
-  };
-
-  window.addEventListener('scroll', handler, { passive: true });
-  handler();
-
-  return () => window.removeEventListener('scroll', handler);
-}
-
-'use client';
-
-
-
-
-
-
-type Props = {
-  source: string; // page identifier
-  locale?: 'US' | 'UK';
-  headline?: string;
-  description?: string;
-};
-
-
-  source,
-  locale,
-  headline = 'Get early access',
-  description = 'Join the waitlist. We’ll email you when kNexo launches in your region.',
-}: Props) {
-  const [email, setEmail] = React.useState('');
-  const [status, setStatus] = React.useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [message, setMessage] = React.useState<string>('');
-
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setStatus('loading');
-    setMessage('');
-
-    try {
-      assertSupabaseEnv();
-
-      const res = await fetch(`${supabaseConfig.url}/rest/v1/waitlist`, {
-        method: 'POST',
-        headers: {
-          apikey: supabaseConfig.anonKey,
-          Authorization: `Bearer ${supabaseConfig.anonKey}`,
-          'Content-Type': 'application/json',
-          Prefer: 'return=minimal',
-        },
-        body: JSON.stringify({
-          email,
-          source,
-          locale: locale ?? null,
-          created_at: new Date().toISOString(),
-          user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
-          referrer: typeof document !== 'undefined' ? document.referrer : null,
-          page_url: typeof window !== 'undefined' ? window.location.href : null,
-        }),
-      });
-
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || 'Failed to submit');
-
-      trackEvent('waitlist_signup', { source, locale: locale ?? 'NA' });
-
-      setStatus('success');
-      setMessage('You’re in. Check your inbox soon.');
-      setEmail('');
-    } catch (err: any) {
-      setStatus('error');
-      setMessage('Something went wrong. Please try again in a moment.');
-    }
-  }
-
-  return (
-    <section
-      id="waitlist"
-      class="relative overflow-hidden rounded-2xl border border-white/12 bg-white/[0.04] p-6 md:p-8"
-      aria-label="Waitlist signup"
-    >
-      <div class="pointer-events-none absolute inset-0 opacity-70">
-        <div class="absolute -top-24 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-[#6C5CE7]/20 blur-3xl" />
-        <div class="absolute -bottom-24 right-10 h-64 w-64 rounded-full bg-[#00D2D3]/18 blur-3xl" />
-      </div>
-
-      <div class="relative">
-        <h3 class="text-xl font-semibold text-white">{headline}</h3>
-        <p class="mt-2 text-sm text-white/70">{description}</p>
-
-        <form onSubmit={onSubmit} class="mt-5 flex flex-col gap-3 md:flex-row md:items-center">
-          <label class="sr-only" htmlFor="email">
-            Email address
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-            class="w-full flex-1 rounded-xl border border-white/12 bg-[#0A0A23]/40 px-4 py-3 text-sm text-white placeholder:text-white/40 outline-none transition focus:border-white/20 focus:ring-2 focus:ring-[#00D2D3]/40"
-          />
-
-          <CTAButton
-            type="submit"
-            variant="primary"
-            disabled={status === 'loading'}
-            eventParams={{ location: 'waitlist_form', source }}
-          >
-            {status === 'loading' ? 'Joining…' : 'Join the waitlist'}
-          </CTAButton>
-        </form>
-
-        <div class="mt-3 min-h-[1.25rem] text-sm">
-          {status === 'success' && <p class="text-[#CFFBFB]">{message}</p>}
-          {status === 'error' && <p class="text-[#FECA57]">{message}</p>}
-          {status === 'idle' && (
-            <p class="text-white/55">
-              No spam. Unsubscribe anytime. We’ll never sell your data.
-            </p>
-          )}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-'use client';
-
-
-
-
-
-  React.useEffect(() => {
-    const cleanup = trackScrollDepth();
-    return () => cleanup?.();
-  }, []);
-
-  return <>{children}</>;
-
-<html lang="en" class="dark">
-      <body class="min-h-screen bg-[#0A0A23] text-white antialiased">
-        <!-- Google Tag Manager -->
-        {gtm ? (
-          <Script id="gtm" strategy="afterInteractive">
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+<html lang="en" class=${inter.variable} ${spaceGrotesk.variable} dark>
+      <body class="min-h-dvh bg-[#0A0A23] text-white antialiased selection:bg-[#6C5CE7]/40 selection:text-white">
+        <!-- Google Tag Manager (head) -->
+        {gtmId ? (
+          <Script id="gtm-head" strategy="afterInteractive">
+            
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
               new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
               j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-              })(window,document,'script','dataLayer','${gtm}');
+              })(window,document,'script','dataLayer','${gtmId}');
+            
           </Script>
         ) : null}
 
-        <!-- GA4 -->
-        {ga4 ? (
+        <!-- Google Analytics 4 -->
+        {gaId ? (
           <>
-            <Script src=https://www.googletagmanager.com/gtag/js?id=${ga4} strategy="afterInteractive" />
+            <Script async src=https://www.googletagmanager.com/gtag/js?id=${gaId} strategy="afterInteractive" />
             <Script id="ga4" strategy="afterInteractive">
-              window.dataLayer = window.dataLayer || [];
+              
+                window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
-                window.gtag = gtag;
                 gtag('js', new Date());
-                gtag('config', '${ga4}', { anonymize_ip: true });
+                gtag('config', '${gaId}', { anonymize_ip: true });
+              
             </Script>
           </>
         ) : null}
 
-        <!-- GTM noscript -->
-        {gtm ? (
+        <!-- Google Tag Manager (noscript) -->
+        {gtmId ? (
           <noscript>
             <iframe
-              src=https://www.googletagmanager.com/ns.html?id=${gtm}
+              src=https://www.googletagmanager.com/ns.html?id=${gtmId}
               height="0"
               width="0"
-              style={{ display: 'none', visibility: 'hidden' }}
+              style={{ display: "none", visibility: "hidden" }}
             />
           </noscript>
         ) : null}
 
-        <Providers>{children}</Providers>
+        <Analytics />
+        {children}
       </body>
     </html>
 
@@ -551,965 +63,1364 @@ type Props = {
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  --bg: #0a0a23;
+  --primary: #6c5ce7;
+  --secondary: #00d2d3;
+  --accent: #feca57;
 
-<Script
-      id=schema-${json['@type'] ?? 'jsonld'}
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }}
-    />
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://knexo.com';
-
-
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: 'Nexus Fin (kNexo)',
-    url: siteUrl,
-    logo: `${siteUrl}/og/knexo-og.png`,
-    sameAs: ['https://x.com', 'https://instagram.com'],
-  };
-
-export function productSchema(pageUrl: string, name: string, description: string) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name,
-    description,
-    brand: { '@type': 'Brand', name: 'kNexo' },
-    url: pageUrl,
-    category: 'Personal finance software',
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-      availability: 'https://schema.org/PreOrder',
-      url: pageUrl,
-    },
-  };
+html,
+body {
+  height: 100%;
 }
 
-export function faqSchema(pageUrl: string, faqs: { q: string; a: string }[]) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqs.map((f) => ({
-      '@type': 'Question',
-      name: f.q,
-      acceptedAnswer: { '@type': 'Answer', text: f.a },
-    })),
-    url: pageUrl,
-  };
+body {
+  font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
 }
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://knexo.com';
+.h-hero {
+  font-family: var(--font-space), var(--font-inter), ui-sans-serif, system-ui;
+}
 
-export const metadata: Metadata = {
-  title: 'kNexo — AI Budgeting on WhatsApp (US) | Join the Waitlist',
-  description:
-    'The AI budgeting app that works on WhatsApp. Text your spending, get proactive insights, and stay consistent with missions, XP, and rewards. Join the US waitlist.',
-  alternates: { canonical: '/' },
-  openGraph: {
-    title: 'kNexo — AI Budgeting on WhatsApp (US)',
-    description:
-      'Text your spending on WhatsApp. Get AI insights + real gamification. Join the waitlist.',
-    url: siteUrl,
-    images: [{ url: '/og/knexo-og.png', width: 1200, height: 630, alt: 'kNexo' }],
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'kNexo — AI Budgeting on WhatsApp (US)',
-    description:
-      'Text your spending on WhatsApp. Get AI insights + real gamification. Join the waitlist.',
-    images: ['/og/knexo-og.png'],
-  },
+"use client";
+
+
+
+
+
+
+type Variant = "primary" | "secondary" | "outline";
+
+const styles: Record<Variant, string> = {
+  primary:
+    "bg-gradient-to-r from-[#6C5CE7] via-[#7C6CFF] to-[#00D2D3] text-white shadow-[0_0_0_1px_rgba(255,255,255,0.12),0_20px_60px_-20px_rgba(108,92,231,0.75)] hover:opacity-95",
+  secondary:
+    "bg-white/10 text-white shadow-[0_0_0_1px_rgba(255,255,255,0.12)] hover:bg-white/15",
+  outline:
+    "bg-transparent text-white border border-white/15 hover:border-white/25 hover:bg-white/5",
 };
 
-function Icon({ label }: { label: string }) {
+
+  as = "button",
+  href,
+  onClick,
+  children,
+  variant = "primary",
+  size = "md",
+  className,
+  ariaLabel,
+  eventName,
+}: {
+  as?: "button" | "link";
+  href?: string;
+  onClick?: () => void;
+  children: React.ReactNode;
+  variant?: Variant;
+  size?: "sm" | "md" | "lg";
+  className?: string;
+  ariaLabel?: string;
+  eventName?: string;
+}) {
+  const base =
+    "inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00D2D3]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A23]";
+  const sizes =
+    size === "sm"
+      ? "px-3 py-2 text-sm"
+      : size === "lg"
+        ? "px-6 py-3.5 text-base"
+        : "px-4 py-2.5 text-sm md:text-base";
+
+  const cls = cn(base, sizes, styles[variant], className);
+
+  if (as === "link" && href) {
+    return (
+      <Link
+        href={href}
+        class={cls}
+        aria-label={ariaLabel}
+        onClick={() => {
+          trackCtaClick(eventName || "cta_click", { href, variant });
+          onClick?.();
+        }}
+      >
+        {children}
+      </Link>
+    );
+
   return (
-    <span
-      aria-hidden="true"
-      class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/8 ring-1 ring-white/12"
-      title={label}
+    <button
+      class={cls}
+      aria-label={ariaLabel}
+      onClick={() => {
+        trackCtaClick(eventName || "cta_click", { variant });
+        onClick?.();
+      }}
+      type="button"
     >
-      <span class="h-4 w-4 rounded bg-gradient-to-br from-[#6C5CE7] to-[#00D2D3]" />
-    </span>
+      {children}
+    </button>
+  );
+}
+
+"use client";
+
+
+
+
+
+
+function LogoMark() {
+  // Inline simplified mark (keeps brand feel; avoids huge SVG in navbar)
+  return (
+    <div class="flex items-center gap-2">
+      <div class="h-9 w-9 rounded-2xl bg-white/5 ring-1 ring-white/10 grid place-items-center">
+        <span class="h-4 w-4 rounded-full bg-gradient-to-br from-[#FECA57] to-[#FF9F43] shadow-[0_0_30px_rgba(254,202,87,0.35)]" />
+      </div>
+      <span class="text-lg font-extrabold tracking-tight">
+        <span class="bg-gradient-to-r from-white via-white to-[#CFFBFB] bg-clip-text text-transparent">
+          kNexo
+        </span>
+      </span>
+    </div>
   );
 
-  const pageUrl = `${siteUrl}/`;
-
-  const faqs = [
-    {
-      q: 'Is kNexo a WhatsApp budgeting app?',
-      a: 'Yes. kNexo is built WhatsApp-first: you text spending and get categorized tracking, summaries, and insights without opening a traditional app.',
-    },
-    {
-      q: 'Does kNexo use AI?',
-      a: 'Yes. kNexo uses AI to categorize spending, detect patterns, and send proactive alerts and suggestions.',
-    },
-    {
-      q: 'Is there gamification?',
-      a: 'Yes. kNexo includes missions, XP, streaks, and levels designed to build consistent money habits.',
-    },
-  ];
+  const [open, setOpen] = React.useState(false);
 
   return (
-    <div class="min-h-screen">
-      <Schema json={organizationSchema()} />
-      <Schema
-        json={productSchema(
-          pageUrl,
-          'kNexo — AI Budgeting on WhatsApp',
-          'Track spending by texting on WhatsApp. Get proactive AI insights, missions, XP, and rewards.'
-        )}
-      />
-      <Schema json={faqSchema(pageUrl, faqs)} />
+    <header class="sticky top-0 z-50 border-b border-white/10 bg-[#0A0A23]/70 backdrop-blur">
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 md:px-6">
+        <Link href="/" class="flex items-center" aria-label="Go to homepage">
+          <LogoMark />
+        </Link>
 
-      <Navbar ctaHref="#waitlist" />
+        <nav class="hidden items-center gap-6 md:flex">
+          <Link class="text-sm text-white/80 hover:text-white transition" href="/whatsapp-expense-tracker">
+            WhatsApp
+          </Link>
+          <Link class="text-sm text-white/80 hover:text-white transition" href="/gamified-budgeting">
+            Gamification
+          </Link>
+          <Link class="text-sm text-white/80 hover:text-white transition" href="/couples-family-budget">
+            Couples & Families
+          </Link>
+          <Button as="link" href={ctaHref} variant="primary" size="sm" ariaLabel={ctaLabel} eventName="cta_click_nav">
+            {ctaLabel}
+          </Button>
+        </nav>
 
-      <main>
-        <!-- Hero -->
-        <section class="relative overflow-hidden">
-          <div class="pointer-events-none absolute inset-0">
-            <div class="absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-[#6C5CE7]/25 blur-3xl" />
-            <div class="absolute -bottom-40 right-10 h-[520px] w-[520px] rounded-full bg-[#00D2D3]/18 blur-3xl" />
+        <button
+          class="md:hidden inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-sm"
+          aria-label="Open menu"
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+        >
+          Menu
+        </button>
+      </div>
+
+      <div class={cn("md:hidden overflow-hidden border-t border-white/10", open ? "max-h-96" : "max-h-0")}>
+        <div class="mx-auto max-w-6xl px-4 py-3 flex flex-col gap-3">
+          <Link class="text-sm text-white/80 hover:text-white transition" href="/whatsapp-expense-tracker" onClick={() => setOpen(false)}>
+            WhatsApp
+          </Link>
+          <Link class="text-sm text-white/80 hover:text-white transition" href="/gamified-budgeting" onClick={() => setOpen(false)}>
+            Gamification
+          </Link>
+          <Link class="text-sm text-white/80 hover:text-white transition" href="/couples-family-budget" onClick={() => setOpen(false)}>
+            Couples & Families
+          </Link>
+          <Button as="link" href={ctaHref} variant="primary" ariaLabel={ctaLabel} eventName="cta_click_nav_mobile">
+            {ctaLabel}
+          </Button>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+<footer class="border-t border-white/10">
+      <div class="mx-auto max-w-6xl px-4 py-10 md:px-6">
+        <div class="grid gap-8 md:grid-cols-4">
+          <div class="md:col-span-2">
+            <div class="text-lg font-extrabold tracking-tight">
+              <span class="bg-gradient-to-r from-white via-white to-[#CFFBFB] bg-clip-text text-transparent">
+                kNexo
+              </span>
+            </div>
+            <p class="mt-3 text-sm text-white/70 max-w-md">
+              AI budgeting on WhatsApp with real gamification and shared finances — turning money stress into daily wins.
+            </p>
           </div>
 
-          <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 md:grid-cols-2 md:px-6 md:py-20">
-            <div class="relative">
-              <p class="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-3 py-1 text-xs font-medium text-white/75">
-                <span class="h-1.5 w-1.5 rounded-full bg-[#00D2D3]" />
-                US launch waitlist
-              </p>
+          <div>
+            <div class="text-sm font-semibold text-white">Product</div>
+            <ul class="mt-3 space-y-2 text-sm text-white/70">
+              <li>
+                <Link class="hover:text-white transition" href="/whatsapp-expense-tracker">
+                  WhatsApp expense tracking
+                </Link>
+              </li>
+              <li>
+                <Link class="hover:text-white transition" href="/gamified-budgeting">
+                  Gamified budgeting
+                </Link>
+              </li>
+              <li>
+                <Link class="hover:text-white transition" href="/couples-family-budget">
+                  Couples & Families
+                </Link>
+              </li>
+            </ul>
+          </div>
 
-              <h1 class="mt-5 text-4xl font-semibold tracking-tight text-white md:text-5xl">
-                The <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#8B7BFF] to-[#00D2D3]">AI budgeting app</span> that lives on WhatsApp.
+          <div>
+            <div class="text-sm font-semibold text-white">Legal</div>
+            <ul class="mt-3 space-y-2 text-sm text-white/70">
+              <li>
+                <Link class="hover:text-white transition" href="/privacy">
+                  Privacy (placeholder)
+                </Link>
+              </li>
+              <li>
+                <Link class="hover:text-white transition" href="/terms">
+                  Terms (placeholder)
+                </Link>
+              </li>
+              <li>
+                <a class="hover:text-white transition" href="mailto:hello@knexo.com">
+                  Contact
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-10 flex flex-col gap-2 md:flex-row md:items-center md:justify-between text-xs text-white/50">
+          <div>© {new Date().getFullYear()} kNexo. All rights reserved.</div>
+          <div class="flex gap-4">
+            <a class="hover:text-white transition" href="#" aria-label="kNexo on X (placeholder)">
+              X
+            </a>
+            <a class="hover:text-white transition" href="#" aria-label="kNexo on Instagram (placeholder)">
+              Instagram
+            </a>
+            <a class="hover:text-white transition" href="#" aria-label="kNexo on TikTok (placeholder)">
+              TikTok
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+"use client";
+
+
+
+
+
+type Props = {
+  source: string; // page identifier
+  buttonLabel?: string;
+};
+
+
+  const [email, setEmail] = React.useState("");
+  const [country, setCountry] = React.useState<string>("US");
+  const [loading, setLoading] = React.useState(false);
+  const [status, setStatus] = React.useState<"idle" | "ok" | "error">("idle");
+  const [message, setMessage] = React.useState<string>("");
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus("idle");
+    setMessage("");
+
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (!supabaseUrl || !anonKey) {
+      setStatus("error");
+      setMessage("Missing Supabase env vars. Please configure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.");
+      return;
+
+    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+      setStatus("error");
+      setMessage("Please enter a valid email.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch(`${supabaseUrl}/rest/v1/waitlist`, {
+        method: "POST",
+        headers: {
+          apikey: anonKey,
+          Authorization: `Bearer ${anonKey}`,
+          "Content-Type": "application/json",
+          Prefer: "return=representation",
+        },
+        body: JSON.stringify([
+          {
+            email,
+            country,
+            source,
+            created_at: new Date().toISOString(),
+            user_agent: typeof navigator !== "undefined" ? navigator.userAgent : null,
+            referrer: typeof document !== "undefined" ? document.referrer : null,
+            utm_source: getParam("utm_source"),
+            utm_medium: getParam("utm_medium"),
+            utm_campaign: getParam("utm_campaign"),
+            utm_term: getParam("utm_term"),
+            utm_content: getParam("utm_content"),
+          },
+        ]),
+      });
+
+      if (!res.ok) {
+        const txt = await res.text();
+        throw new Error(txt || "Request failed");
+      }
+
+      setStatus("ok");
+      setMessage("You're on the list. We'll email you early access.");
+      trackWaitlistSignup({ source, country });
+      setEmail("");
+    } catch (err: any) {
+      setStatus("error");
+      setMessage("Something went wrong. Try again in a moment.");
+      // Optional: console for debugging
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <form onSubmit={submit} class="w-full">
+      <div class="grid gap-3 md:grid-cols-[1fr_140px_190px]">
+        <label class="sr-only" htmlFor=email-${source}>
+          Email
+        </label>
+        <input
+          id=email-${source}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@email.com"
+          inputMode="email"
+          autoComplete="email"
+          class="h-12 w-full rounded-xl bg-white/5 px-4 text-sm text-white placeholder:text-white/40 ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-[#00D2D3]/60"
+          aria-label="Email address"
+        />
+
+        <label class="sr-only" htmlFor=country-${source}>
+          Country
+        </label>
+        <select
+          id=country-${source}
+          value={country}
+          onChange={(e) => setCountry(e.target.value)}
+          class="h-12 w-full rounded-xl bg-white/5 px-3 text-sm text-white ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-[#00D2D3]/60"
+          aria-label="Country"
+        >
+          <option value="US">US</option>
+          <option value="UK">UK</option>
+        </select>
+
+        <Button
+          as="button"
+          variant="primary"
+          size="md"
+          class="h-12"
+          ariaLabel={buttonLabel}
+          eventName="cta_click_waitlist"
+          onClick={() => {}}
+        >
+          {loading ? "Joining..." : buttonLabel}
+        </Button>
+      </div>
+
+      <p class="mt-3 text-xs text-white/60">
+        No spam. Early access + launch perks. By joining, you agree to receive product updates.
+      </p>
+
+      {status !== "idle" ? (
+        <div
+          class=mt-3 rounded-xl border px-4 py-3 text-sm ${
+            status === "ok"
+              ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-100"
+              : "border-rose-400/20 bg-rose-400/10 text-rose-100"
+          }
+          role="status"
+          aria-live="polite"
+        >
+          {message}
+        </div>
+      ) : null}
+    </form>
+  );
+}
+
+function getParam(key: string) {
+  if (typeof window === "undefined") return null;
+  const v = new URLSearchParams(window.location.search).get(key);
+  return v ? v : null;
+}
+
+type TrackPayload = Record<string, any>;
+
+declare global {
+  interface Window {
+    dataLayer?: any[];
+    gtag?: (...args: any[]) => void;
+
+}
+
+
+  if (typeof window === "undefined") return;
+
+  // GA4
+  if (typeof window.gtag === "function") {
+    window.gtag("event", event, payload);
+  }
+
+  // GTM
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ event, ...payload });
+}
+
+export function trackWaitlistSignup(payload: TrackPayload = {}) {
+  track("waitlist_signup", payload);
+}
+
+export function trackCtaClick(eventName = "cta_click", payload: TrackPayload = {}) {
+  track(eventName, payload);
+}
+
+export function trackScrollDepth(depth: number) {
+  track("page_scroll_depth", { depth });
+}
+
+"use client";
+
+
+
+
+
+  React.useEffect(() => {
+    const marks = new Set<number>();
+    const depths = [25, 50, 75, 90];
+
+    function onScroll() {
+      const doc = document.documentElement;
+      const scrollTop = window.scrollY || doc.scrollTop;
+      const height = doc.scrollHeight - doc.clientHeight;
+      if (height <= 0) return;
+      const pct = Math.round((scrollTop / height) * 100);
+
+      for (const d of depths) {
+        if (pct >= d && !marks.has(d)) {
+          marks.add(d);
+          trackScrollDepth(d);
+
+      }
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return null;
+}
+
+return classes.filter(Boolean).join(" ");
+
+title,
+  description,
+  path,
+}: {
+  title: string;
+  description: string;
+  path: string;
+}): Metadata {
+  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://knexo.com";
+  const url = `${base}${path}`;
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: "kNexo",
+      type: "website",
+      images: [{ url: "/og/knexo-og.png", width: 1200, height: 630, alt: "kNexo" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/og/knexo-og.png"],
+    },
+  };
+
+export function OrganizationJsonLd() {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://knexo.com";
+  const json = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "kNexo",
+    url: siteUrl,
+    logo: `${siteUrl}/og/knexo-og.png`,
+    sameAs: [],
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }} />;
+}
+
+export function ProductJsonLd({ name, description }: { name: string; description: string }) {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://knexo.com";
+  const json = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name,
+    description,
+    brand: { "@type": "Brand", name: "kNexo" },
+    url: siteUrl,
+    category: "Personal Finance Software",
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }} />;
+}
+
+export function FaqJsonLd({
+  faqs,
+}: {
+  faqs: Array<{ question: string; answer: string }>;
+}) {
+  const json = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: { "@type": "Answer", text: f.answer },
+    })),
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }} />;
+}
+
+export const metadata = buildMetadata({
+  title: "kNexo — AI Budgeting on WhatsApp (US) | Join the Waitlist",
+  description:
+    "The AI budgeting app that lives on WhatsApp. Text your spending, get proactive insights, and stay consistent with missions, XP, and rewards. Join the US waitlist.",
+  path: "/",
+});
+
+
+  return (
+    <div class="min-h-dvh">
+      <Navbar ctaHref="#waitlist" ctaLabel="Join the waitlist" />
+      <main>
+        <!-- JSON-LD -->
+        <OrganizationJsonLd />
+        <ProductJsonLd
+          name="kNexo — AI Budgeting on WhatsApp"
+          description="WhatsApp-first AI budgeting with gamification and shared finances."
+        />
+        <FaqJsonLd
+          faqs={[
+            {
+              question: "Is kNexo a WhatsApp budgeting app?",
+              answer:
+                "kNexo is a WhatsApp-first budgeting experience: you text expenses and get categorized summaries, insights, and reminders via conversational AI.",
+            },
+            {
+              question: "Does kNexo support gamified budgeting?",
+              answer:
+                "Yes. kNexo includes missions, XP, streaks, and rewards designed to build consistent money habits.",
+            },
+            {
+              question: "Can I use kNexo with my partner or family?",
+              answer:
+                "Yes. kNexo is built for shared household visibility and goals (couples & families mode).",
+            },
+          ]}
+        />
+
+        <!-- Background glow -->
+        <div class="pointer-events-none fixed inset-0 -z-10">
+          <div class="absolute left-1/2 top-[-10%] h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-[#6C5CE7]/25 blur-[90px]" />
+          <div class="absolute right-[-10%] top-[20%] h-[520px] w-[520px] rounded-full bg-[#00D2D3]/18 blur-[110px]" />
+          <div class="absolute left-[-10%] bottom-[-10%] h-[520px] w-[520px] rounded-full bg-[#FECA57]/10 blur-[110px]" />
+        </div>
+
+        <!-- Hero -->
+        <section class="mx-auto max-w-6xl px-4 pt-14 pb-10 md:px-6 md:pt-20">
+          <div class="grid items-center gap-10 md:grid-cols-2">
+            <div>
+              <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
+                <span class="h-2 w-2 rounded-full bg-[#00D2D3] shadow-[0_0_20px_rgba(0,210,211,0.6)]" />
+                US launch waitlist — early access perks
+              </div>
+
+              <h1 class="h-hero mt-5 text-4xl font-extrabold leading-tight tracking-tight md:text-5xl">
+                The AI budgeting app that lives on 
+                <span class="bg-gradient-to-r from-[#6C5CE7] to-[#00D2D3] bg-clip-text text-transparent">
+                  WhatsApp
+                </span>
+                .
               </h1>
-
-              <p class="mt-4 text-base leading-relaxed text-white/75 md:text-lg">
+              <p class="mt-4 text-base text-white/75 md:text-lg">
                 Text your spending. Get proactive insights. Stay consistent with missions, XP, and rewards — solo or with your partner/family.
               </p>
 
-              <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <CTAButton href="#waitlist" variant="primary" eventParams={{ location: 'hero' }}>
-                  Join the waitlist
-                </CTAButton>
-                <p class="text-sm text-white/60">
-                  Early access + founding-user perks.
-                </p>
+              <div class="mt-7" id="waitlist">
+                <WaitlistForm source="landing_us" buttonLabel="Join the waitlist" />
               </div>
 
-              <div class="mt-8 grid grid-cols-3 gap-4">
-                {[
-                  { k: '60s', v: 'setup' },
-                  { k: '0', v: 'spreadsheets' },
-                  { k: '24/7', v: 'AI nudges' },
-                ].map((m) => (
-                  <div key={m.v} class="rounded-xl border border-white/10 bg-white/[0.04] p-4">
-                    <div class="text-lg font-semibold text-white">{m.k}</div>
-                    <div class="text-xs text-white/60">{m.v}</div>
-                  </div>
-                ))}
+              <div class="mt-6 flex flex-wrap items-center gap-3 text-xs text-white/60">
+                <div class="rounded-full border border-white/10 bg-white/5 px-3 py-1">No spreadsheets</div>
+                <div class="rounded-full border border-white/10 bg-white/5 px-3 py-1">WhatsApp-first</div>
+                <div class="rounded-full border border-white/10 bg-white/5 px-3 py-1">Real gamification</div>
+                <div class="rounded-full border border-white/10 bg-white/5 px-3 py-1">Shared budgets</div>
               </div>
             </div>
 
-            <!-- Hero visual -->
             <div class="relative">
-              <div class="rounded-2xl border border-white/12 bg-gradient-to-b from-white/[0.06] to-white/[0.02] p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_30px_80px_rgba(0,0,0,0.45)]">
+              <div class="rounded-3xl border border-white/10 bg-gradient-to-b from-white/10 to-white/5 p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_40px_120px_-60px_rgba(0,210,211,0.45)]">
                 <div class="flex items-center justify-between">
-                  <div class="text-sm font-semibold text-white">WhatsApp-style AI Budgeting</div>
-                  <div class="text-xs text-white/55">Preview</div>
+                  <div class="text-sm font-semibold text-white">WhatsApp demo</div>
+                  <div class="text-xs text-white/60">Placeholder UI</div>
                 </div>
 
-                <div class="mt-4 space-y-3">
-                  <!-- Placeholder conversation -->
-                  <div class="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-[#6C5CE7]/25 px-4 py-3 text-sm text-white/90 ring-1 ring-white/10">
-                    Spent $18.40 at Trader Joe’s
-                  </div>
-                  <div class="max-w-[90%] rounded-2xl rounded-tl-sm bg-white/8 px-4 py-3 text-sm text-white/85 ring-1 ring-white/10">
-                    Logged: <span class="font-semibold">Groceries</span>. Want a weekly grocery cap?
-                    <div class="mt-2 text-xs text-white/60">
-                      Suggested: $90/week · You’re at $41.20
-                    </div>
-                  </div>
-                  <div class="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-[#00D2D3]/20 px-4 py-3 text-sm text-white/90 ring-1 ring-white/10">
-                    Yes — set it.
-                  </div>
-                  <div class="max-w-[90%] rounded-2xl rounded-tl-sm bg-white/8 px-4 py-3 text-sm text-white/85 ring-1 ring-white/10">
-                    Done. Mission unlocked: <span class="font-semibold">“Week 1 Grocery Guard”</span> (+120 XP)
+                <!-- Hero image/animation placeholder -->
+                <div class="mt-4 rounded-2xl bg-[#0A0A23] ring-1 ring-white/10 p-4">
+                  <div class="space-y-3 text-sm">
+                    <Bubble from="user" text="Coffee $5.75" />
+                    <Bubble from="ai" text="Logged. ☕ Food & Drink. Want a weekly cap for coffee?" />
+                    <Bubble from="user" text="Yes, $20/week" />
+                    <Bubble from="ai" text="Done. Mission unlocked: 3 no-spend days this week → +120 XP" />
                   </div>
                 </div>
 
-                <div class="mt-5 rounded-xl border border-white/10 bg-[#0A0A23]/40 p-4">
-                  <div class="flex items-center justify-between">
-                    <div class="text-xs text-white/60">Streak</div>
-                    <div class="text-xs font-semibold text-[#CFFBFB]">5 days</div>
-                  </div>
-                  <div class="mt-2 h-2 w-full rounded-full bg-white/8">
-                    <div class="h-2 w-[62%] rounded-full bg-gradient-to-r from-[#FECA57] to-[#00D2D3]" />
-                  </div>
-                  <div class="mt-2 flex items-center justify-between text-xs text-white/55">
-                    <span>Level 3</span>
-                    <span>620 / 1000 XP</span>
-                  </div>
-                </div>
-
-                <!-- Hero image placeholder -->
-                <div class="mt-4 text-xs text-white/45">
-                  <!-- Hero image: person using WhatsApp on phone, dark UI -->
+                <div class="mt-4 grid grid-cols-3 gap-3">
+                  <MiniStat label="Auto-categorize" value="Instant" />
+                  <MiniStat label="Insights" value="Proactive" />
+                  <MiniStat label="Consistency" value="XP + streaks" />
                 </div>
               </div>
+
+              <div class="pointer-events-none absolute -inset-6 -z-10 rounded-[2.5rem] bg-gradient-to-r from-[#6C5CE7]/25 via-transparent to-[#00D2D3]/25 blur-2xl" />
             </div>
           </div>
         </section>
 
         <!-- Features grid -->
-        <section class="mx-auto max-w-6xl px-4 py-14 md:px-6">
-          <div class="flex items-end justify-between gap-6">
-            <div>
-              <h2 class="text-2xl font-semibold tracking-tight text-white md:text-3xl">
-                Built for daily wins — not monthly guilt.
-              </h2>
-              <p class="mt-2 text-sm text-white/70">
-                WhatsApp-first capture + proactive AI + real gamification + shared budgets.
-              </p>
-            </div>
+        <section class="mx-auto max-w-6xl px-4 py-12 md:px-6">
+          <div class="max-w-2xl">
+            <h2 class="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">
+              Built for real life (not spreadsheets).
+            </h2>
+            <p class="mt-3 text-white/70">
+              kNexo combines WhatsApp-first tracking, proactive AI, and a real habit loop — so budgeting finally sticks.
+            </p>
           </div>
 
           <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                t: 'WhatsApp-first tracking',
-                d: 'Log expenses in seconds by texting — no spreadsheet, no app switching.',
-              },
-              {
-                t: 'Proactive AI insights',
-                d: 'Get alerts when spending drifts, plus opportunities to save automatically.',
-              },
-              {
-                t: 'Missions, XP & streaks',
-                d: 'A real loop that keeps you consistent — not “badge-only” gamification.',
-              },
-              {
-                t: 'Couples & family mode',
-                d: 'Shared visibility, shared goals, and household missions built-in.',
-              },
-              {
-                t: 'Smart categories',
-                d: 'AI categorization with quick corrections and learning over time.',
-              },
-              {
-                t: 'Privacy-minded by design',
-                d: 'Clear data handling, minimal collection, and unsubscribe anytime.',
-              },
-            ].map((f) => (
-              <div
-                key={f.t}
-                class="group rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition hover:bg-white/[0.06]"
-              >
-                <Icon label={f.t} />
-                <div class="mt-4 text-base font-semibold text-white">{f.t}</div>
-                <p class="mt-2 text-sm leading-relaxed text-white/70">{f.d}</p>
-              </div>
-            ))}
+            <FeatureCard icon="💬" title="WhatsApp-first tracking" desc="Log expenses where you already chat — no app-switching friction." />
+            <FeatureCard icon="🧠" title="Proactive AI insights" desc="Get alerts, patterns, and opportunities pushed automatically." />
+            <FeatureCard icon="🎮" title="Real gamification loop" desc="Missions, XP, streaks, and achievements designed to build habits." />
+            <FeatureCard icon="👥" title="Couples & family mode" desc="Shared visibility, shared goals, shared wins — without chaos." />
+            <FeatureCard icon="🔒" title="Privacy-minded design" desc="Clear data handling and security-first architecture (details at launch)." />
+            <FeatureCard icon="⚡" title="Fast daily wins" desc="Small actions → immediate progress. Make money feel manageable again." />
           </div>
         </section>
 
         <!-- Social proof -->
-        <section class="mx-auto max-w-6xl px-4 py-14 md:px-6">
-          <div class="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-white/[0.02] p-6 md:p-8">
-            <div class="grid gap-8 md:grid-cols-2 md:items-center">
-              <div>
-                <h2 class="text-2xl font-semibold tracking-tight text-white md:text-3xl">
-                  Momentum you can feel.
-                </h2>
-                <p class="mt-2 text-sm text-white/70">
-                  Placeholders below — swap with real metrics and testimonials as you collect them.
-                </p>
-
-                <div class="mt-6 grid grid-cols-3 gap-3">
-                  {[
-                    { k: '10k+', v: 'messages processed' },
-                    { k: '92%', v: 'categorization accuracy' },
-                    { k: '4.8/5', v: 'habit satisfaction' },
-                  ].map((m) => (
-                    <div key={m.v} class="rounded-xl border border-white/10 bg-white/[0.04] p-4">
-                      <div class="text-lg font-semibold">{m.k}</div>
-                      <div class="text-xs text-white/60">{m.v}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div class="space-y-3">
-                {[
-                  {
-                    q: '“I finally track spending without thinking about it.”',
-                    a: '— Beta user (placeholder)',
-                  },
-                  {
-                    q: '“The missions made saving feel doable.”',
-                    a: '— Early adopter (placeholder)',
-                  },
-                  {
-                    q: '“Couple mode stopped money fights.”',
-                    a: '— Household tester (placeholder)',
-                  },
-                ].map((t) => (
-                  <figure
-                    key={t.q}
-                    class="rounded-2xl border border-white/10 bg-white/[0.04] p-5"
-                  >
-                    <blockquote class="text-sm text-white/80">“{t.q.replaceAll('“', '').replaceAll('”', '')}”</blockquote>
-                    <figcaption class="mt-2 text-xs text-white/55">{t.a}</figcaption>
-                  </figure>
-                ))}
-              </div>
+        <section class="mx-auto max-w-6xl px-4 py-12 md:px-6">
+          <div class="grid gap-6 md:grid-cols-2 md:items-end">
+            <div>
+              <h2 class="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">Momentum you can feel.</h2>
+              <p class="mt-3 text-white/70">
+                Early community + placeholder metrics. Replace with real numbers post-launch.
+              </p>
             </div>
+            <div class="grid grid-cols-3 gap-3">
+              <Metric value="2.4k+" label="Waitlist interest" />
+              <Metric value="4.8/5" label="Concept rating" />
+              <Metric value="60s" label="To first win" />
+            </div>
+          </div>
+
+          <div class="mt-8 grid gap-4 md:grid-cols-3">
+            <Testimonial
+              quote="“If I can text my spending and get a weekly plan automatically, I’m in.”"
+              name="Waitlist user"
+              role="US"
+            />
+            <Testimonial quote="“The missions + XP idea is the first budgeting thing that feels motivating.”" name="Beta interest" role="Personal finance" />
+            <Testimonial quote="“Shared household money without spreadsheets would be a game-changer.”" name="Couples lead" role="NYC" />
           </div>
         </section>
 
         <!-- How it works -->
-        <section class="mx-auto max-w-6xl px-4 py-14 md:px-6">
-          <h2 class="text-2xl font-semibold tracking-tight text-white md:text-3xl">How it works</h2>
-          <p class="mt-2 text-sm text-white/70">A simple loop designed for consistency.</p>
-
+        <section class="mx-auto max-w-6xl px-4 py-12 md:px-6">
+          <h2 class="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">How it works</h2>
           <div class="mt-8 grid gap-4 md:grid-cols-4">
-            {[
-              { n: '01', t: 'Text an expense', d: 'Send “Spent $12 on coffee” on WhatsApp.' },
-              { n: '02', t: 'AI logs & learns', d: 'Auto-categorizes and adapts to your corrections.' },
-              { n: '03', t: 'Get proactive nudges', d: 'Alerts, summaries, and “next best action” suggestions.' },
-              { n: '04', t: 'Earn XP & level up', d: 'Missions, streaks, rewards — solo or shared.' },
-            ].map((s) => (
-              <div key={s.n} class="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-                <div class="text-xs font-semibold text-white/55">{s.n}</div>
-                <div class="mt-2 text-base font-semibold text-white">{s.t}</div>
-                <p class="mt-2 text-sm text-white/70">{s.d}</p>
-              </div>
-            ))}
+            <Step n="1" title="Text an expense" desc="Send “Lunch $12” on WhatsApp." />
+            <Step n="2" title="AI organizes it" desc="Auto-categorizes and updates your budget." />
+            <Step n="3" title="Get proactive nudges" desc="Alerts, caps, and weekly summaries — automatically." />
+            <Step n="4" title="Earn XP & rewards" desc="Missions and streaks keep you consistent." />
           </div>
         </section>
 
         <!-- Final CTA -->
-        <section class="mx-auto max-w-6xl px-4 pb-16 md:px-6">
-          <WaitlistForm
-            source="landing_us"
-            locale="US"
-            headline="Join the US waitlist"
-            description="Be first to try WhatsApp-first AI budgeting + missions, XP, and shared household goals."
-          />
+        <section class="mx-auto max-w-6xl px-4 py-14 md:px-6">
+          <div class="rounded-3xl border border-white/10 bg-gradient-to-r from-white/10 to-white/5 p-7 md:p-10">
+            <div class="grid gap-8 md:grid-cols-2 md:items-center">
+              <div>
+                <h2 class="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">Be first in line for US launch.</h2>
+                <p class="mt-3 text-white/70">
+                  Early access + launch perks. One email when it’s time.
+                </p>
+              </div>
+              <WaitlistForm source="landing_us_bottom" buttonLabel="Join the waitlist" />
+            </div>
+          </div>
         </section>
       </main>
-
       <Footer />
+    </div>
+  );
+
+function Bubble({ from, text }: { from: "user" | "ai"; text: string }) {
+  const isUser = from === "user";
+  return (
+    <div class=flex ${isUser ? "justify-end" : "justify-start"}>
+      <div
+        class=max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-relaxed ring-1 ${
+          isUser
+            ? "bg-[#6C5CE7]/20 ring-[#6C5CE7]/35 text-white"
+            : "bg-white/5 ring-white/10 text-white/90"
+        }
+      >
+        {text}
+      </div>
     </div>
   );
 }
 
-<div class="min-h-screen">
-      <Schema
-        json={productSchema(
-          pageUrl,
-          'kNexo WhatsApp Expense Tracker',
-          'Text your spending on WhatsApp. AI categorizes, summarizes, and sends proactive insights.'
-        )}
-      />
-      <Schema json={faqSchema(pageUrl, faqs)} />
+function MiniStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div class="rounded-2xl border border-white/10 bg-white/5 px-3 py-3">
+      <div class="text-xs text-white/60">{label}</div>
+      <div class="mt-1 text-sm font-semibold text-white">{value}</div>
+    </div>
+  );
+}
 
-      <Navbar ctaHref="#waitlist" />
+function FeatureCard({ icon, title, desc }: { icon: string; title: string; desc: string }) {
+  return (
+    <div class="group rounded-3xl border border-white/10 bg-white/5 p-5 transition hover:bg-white/7">
+      <div class="flex items-center gap-3">
+        <div class="grid h-10 w-10 place-items-center rounded-2xl bg-white/5 ring-1 ring-white/10">
+          <span aria-hidden>{icon}</span>
+        </div>
+        <div class="text-base font-semibold">{title}</div>
+      </div>
+      <p class="mt-3 text-sm text-white/70">{desc}</p>
+      <div class="mt-4 h-px w-full bg-gradient-to-r from-[#6C5CE7]/60 via-white/10 to-[#00D2D3]/60 opacity-0 transition group-hover:opacity-100" />
+    </div>
+  );
+}
 
-      <main>
+function Metric({ value, label }: { value: string; label: string }) {
+  return (
+    <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-center">
+      <div class="text-xl font-extrabold">{value}</div>
+      <div class="mt-1 text-xs text-white/60">{label}</div>
+    </div>
+  );
+}
+
+function Testimonial({ quote, name, role }: { quote: string; name: string; role: string }) {
+  return (
+    <figure class="rounded-3xl border border-white/10 bg-white/5 p-5">
+      <blockquote class="text-sm text-white/80"> {quote} </blockquote>
+      <figcaption class="mt-4 flex items-center justify-between text-xs text-white/60">
+        <span class="font-semibold text-white/75">{name}</span>
+        <span>{role}</span>
+      </figcaption>
+    </figure>
+  );
+}
+
+function Step({ n, title, desc }: { n: string; title: string; desc: string }) {
+  return (
+    <div class="rounded-3xl border border-white/10 bg-white/5 p-5">
+      <div class="flex items-center gap-3">
+        <div class="grid h-9 w-9 place-items-center rounded-2xl bg-gradient-to-br from-[#6C5CE7]/40 to-[#00D2D3]/20 ring-1 ring-white/10 text-sm font-extrabold">
+          {n}
+        </div>
+        <div class="text-sm font-semibold">{title}</div>
+      </div>
+      <p class="mt-3 text-sm text-white/70">{desc}</p>
+    </div>
+  );
+}
+
+export const metadata = buildMetadata({
+  title: "kNexo WhatsApp Expense Tracker — Text Your Spending, Get Insights (US/UK)",
+  description:
+    "Track expenses on WhatsApp: text purchases, auto-categorize, and get AI insights and weekly summaries. No spreadsheets. Join the kNexo waitlist (US/UK).",
+  path: "/whatsapp-expense-tracker",
+});
+
+
+  return (
+    <div class="min-h-dvh">
+      <Navbar ctaHref="#waitlist" ctaLabel="Join the waitlist" />
+      <main class="mx-auto max-w-6xl px-4 md:px-6">
+        <OrganizationJsonLd />
+        <ProductJsonLd
+          name="kNexo WhatsApp Expense Tracker"
+          description="Text your spending on WhatsApp and get AI insights, summaries, and missions."
+        />
+        <FaqJsonLd
+          faqs={[
+            {
+              question: "How do I track expenses on WhatsApp with kNexo?",
+              answer:
+                "You send a message like “Groceries $42” and kNexo logs it, categorizes it, and updates your budget automatically.",
+            },
+            {
+              question: "Do I need to open an app?",
+              answer:
+                "No. kNexo is WhatsApp-first, designed to reduce friction so you can stay consistent.",
+            },
+          ]}
+        />
+
         <!-- Hero -->
-        <section class="relative overflow-hidden">
-          <div class="pointer-events-none absolute inset-0">
-            <div class="absolute -top-40 left-1/3 h-[520px] w-[520px] rounded-full bg-[#00D2D3]/18 blur-3xl" />
-            <div class="absolute -bottom-40 right-10 h-[520px] w-[520px] rounded-full bg-[#6C5CE7]/22 blur-3xl" />
-          </div>
+        <section class="pt-14 pb-10 md:pt-20">
+          <div class="grid gap-10 md:grid-cols-2 md:items-center">
+            <div>
+              <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
+                <span class="h-2 w-2 rounded-full bg-[#00D2D3]" />
+                WhatsApp-first experience
+              </div>
 
-          <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 md:grid-cols-2 md:px-6 md:py-20">
-            <div class="relative">
-              <p class="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-3 py-1 text-xs font-medium text-white/75">
-                <span class="h-1.5 w-1.5 rounded-full bg-[#FECA57]" />
-                WhatsApp-first expense tracking
-              </p>
-
-              <h1 class="mt-5 text-4xl font-semibold tracking-tight text-white md:text-5xl">
-                Track spending by <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#00D2D3] to-[#8B7BFF]">texting</span>.
+              <h1 class="h-hero mt-5 text-4xl font-extrabold leading-tight tracking-tight md:text-5xl">
+                Text your spending. 
+                <span class="bg-gradient-to-r from-[#6C5CE7] to-[#00D2D3] bg-clip-text text-transparent">
+                  Get clarity
+                </span> 
+                automatically.
               </h1>
-
-              <p class="mt-4 text-base leading-relaxed text-white/75 md:text-lg">
-                kNexo turns WhatsApp into your expense tracker: log purchases in seconds, get smart categories, and receive proactive insights.
+              <p class="mt-4 text-base text-white/75 md:text-lg">
+                kNexo turns WhatsApp messages into a clean expense timeline, categories, caps, and proactive insights — without spreadsheets.
               </p>
 
-              <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <CTAButton href="#waitlist" variant="primary" eventParams={{ location: 'hero_whatsapp' }}>
-                  Join the waitlist
-                </CTAButton>
-                <p class="text-sm text-white/60">Works for US & UK habits (USD/GBP-ready).</p>
+              <div class="mt-7" id="waitlist">
+                <WaitlistForm source="whatsapp_page" buttonLabel="Join the waitlist" />
+              </div>
+
+              <div class="mt-6 grid grid-cols-2 gap-3 text-xs text-white/60">
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-3">Lower friction than apps</div>
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-3">Faster daily capture</div>
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-3">Proactive reminders</div>
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-3">Weekly summaries</div>
               </div>
             </div>
 
             <!-- Demo visual -->
             <div class="relative">
-              <div class="rounded-2xl border border-white/12 bg-white/[0.04] p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_30px_80px_rgba(0,0,0,0.45)]">
+              <div class="rounded-3xl border border-white/10 bg-gradient-to-b from-white/10 to-white/5 p-5">
                 <div class="flex items-center justify-between">
-                  <div class="text-sm font-semibold text-white">WhatsApp demo</div>
-                  <div class="text-xs text-white/55">Mock conversation</div>
+                  <div class="text-sm font-semibold">WhatsApp conversation</div>
+                  <div class="text-xs text-white/60">Mockup</div>
                 </div>
-
-                <div class="mt-4 space-y-3">
-                  <div class="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-[#00D2D3]/18 px-4 py-3 text-sm text-white/90 ring-1 ring-white/10">
-                    Paid £42.10 for groceries
+                <div class="mt-4 rounded-2xl bg-[#0A0A23] ring-1 ring-white/10 p-4">
+                  <div class="space-y-3 text-sm">
+                    <Bubble from="user" text="Uber $18.20" />
+                    <Bubble from="ai" text="Logged under Transport. You’re at 72% of your weekly transport cap." />
+                    <Bubble from="user" text="Any tips to cut it?" />
+                    <Bubble from="ai" text="Try a 2-day transit challenge. Complete it → +80 XP and save ~$25/week." />
                   </div>
-                  <div class="max-w-[90%] rounded-2xl rounded-tl-sm bg-white/8 px-4 py-3 text-sm text-white/85 ring-1 ring-white/10">
-                    Added to <span class="font-semibold">Groceries</span>. This is 68% of your weekly cap.
-                    <div class="mt-2 text-xs text-white/60">
-                      Tip: try a “no-delivery week” mission to save ~£25.
-                    </div>
-                  </div>
-                  <div class="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-[#6C5CE7]/22 px-4 py-3 text-sm text-white/90 ring-1 ring-white/10">
-                    Start the mission
-                  </div>
-                  <div class="max-w-[90%] rounded-2xl rounded-tl-sm bg-white/8 px-4 py-3 text-sm text-white/85 ring-1 ring-white/10">
-                    Mission started. Earn <span class="font-semibold">+200 XP</span> if you complete it by Sunday.
-                  </div>
-                </div>
-
-                <div class="mt-4 text-xs text-white/45">
-                  <!-- Demo visual: WhatsApp chat UI with assistant messages -->
                 </div>
               </div>
+              <div class="pointer-events-none absolute -inset-6 -z-10 rounded-[2.5rem] bg-gradient-to-r from-[#00D2D3]/20 via-transparent to-[#6C5CE7]/20 blur-2xl" />
             </div>
           </div>
         </section>
 
         <!-- Benefits -->
-        <section class="mx-auto max-w-6xl px-4 py-14 md:px-6">
-          <h2 class="text-2xl font-semibold tracking-tight text-white md:text-3xl">Why WhatsApp works</h2>
-          <p class="mt-2 text-sm text-white/70">Less friction means more consistency.</p>
-
+        <section class="py-12">
+          <h2 class="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">Why WhatsApp works</h2>
           <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              { t: 'Zero context switching', d: 'Capture spending where you already chat every day.' },
-              { t: 'Fast logging', d: 'One message is enough — no forms, no categories to hunt.' },
-              { t: 'Proactive reminders', d: 'Get nudges when you drift, not after the month ends.' },
-              { t: 'Natural language', d: '“Spent 12 on coffee” or “Uber 18.90” — kNexo understands.' },
-              { t: 'Shared by default', d: 'Perfect for couples/families: shared thread, shared clarity.' },
-              { t: 'Habit-friendly', d: 'Short loops beat perfect systems. WhatsApp makes it stick.' },
-            ].map((b) => (
-              <div key={b.t} class="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-                <div class="text-base font-semibold text-white">{b.t}</div>
-                <p class="mt-2 text-sm text-white/70">{b.d}</p>
-              </div>
-            ))}
+            <Benefit title="Capture in seconds" desc="Log spending the moment it happens — before you forget." />
+            <Benefit title="No new habit required" desc="You already use WhatsApp daily. kNexo meets you there." />
+            <Benefit title="Conversational clarity" desc="Ask “How am I doing this week?” and get a direct answer." />
+            <Benefit title="Proactive alerts" desc="Get nudges when caps are at risk — not after the damage." />
+            <Benefit title="Works for households" desc="Shared budgets and goals without spreadsheet battles." />
+            <Benefit title="Gamified consistency" desc="Missions and streaks turn tracking into daily wins." />
           </div>
         </section>
 
         <!-- Comparison table -->
-        <section class="mx-auto max-w-6xl px-4 py-14 md:px-6">
-          <h2 class="text-2xl font-semibold tracking-tight text-white md:text-3xl">kNexo vs traditional budgeting apps</h2>
-          <div class="mt-6 overflow-hidden rounded-2xl border border-white/10">
-            <div class="grid grid-cols-3 bg-white/[0.04]">
-              <div class="p-4 text-sm font-semibold text-white">Feature</div>
-              <div class="p-4 text-sm font-semibold text-white">kNexo</div>
-              <div class="p-4 text-sm font-semibold text-white">Traditional apps</div>
-            </div>
-
-            {[
-              ['Log expenses', 'Text on WhatsApp', 'Open app + forms'],
-              ['Insights', 'Proactive AI nudges', 'Mostly dashboards'],
-              ['Consistency', 'Missions + XP + streaks', 'Willpower-based'],
-              ['Households', 'Couples/family mode built-in', 'Often add-on'],
-              ['Friction', 'Low', 'Medium–high'],
-            ].map((row) => (
-              <div key={row[0]} class="grid grid-cols-3 border-t border-white/10">
-                <div class="p-4 text-sm text-white/80">{row[0]}</div>
-                <div class="p-4 text-sm text-white/80">{row[1]}</div>
-                <div class="p-4 text-sm text-white/65">{row[2]}</div>
-              </div>
-            ))}
+        <section class="py-12">
+          <h2 class="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">kNexo vs traditional apps</h2>
+          <div class="mt-6 overflow-x-auto rounded-3xl border border-white/10 bg-white/5">
+            <table class="min-w-[760px] w-full text-left text-sm">
+              <thead class="border-b border-white/10 text-white/80">
+                <tr>
+                  <th class="px-5 py-4">Feature</th>
+                  <th class="px-5 py-4">kNexo</th>
+                  <th class="px-5 py-4">Traditional budgeting apps</th>
+                </tr>
+              </thead>
+              <tbody class="text-white/75">
+                <Row feature="Capture spending" a="WhatsApp message" b="Open app + tap flows" />
+                <Row feature="Insights" a="Proactive AI nudges" b="Mostly dashboards" />
+                <Row feature="Consistency" a="Missions, XP, streaks" b="Basic reminders/badges" />
+                <Row feature="Households" a="Built-in couples/family mode" b="Often an add-on" />
+                <Row feature="Time to first win" a="~60 seconds" b="Setup-heavy" />
+              </tbody>
+            </table>
           </div>
         </section>
 
         <!-- CTA -->
-        <section class="mx-auto max-w-6xl px-4 pb-16 md:px-6">
-          <WaitlistForm
-            source="whatsapp_feature"
-            headline="Get WhatsApp-first expense tracking"
-            description="Join the waitlist to be first to try texting your spending + AI insights + missions."
-          />
+        <section class="py-14">
+          <div class="rounded-3xl border border-white/10 bg-gradient-to-r from-white/10 to-white/5 p-7 md:p-10">
+            <div class="grid gap-8 md:grid-cols-2 md:items-center">
+              <div>
+                <h2 class="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">Want the WhatsApp-first beta?</h2>
+                <p class="mt-3 text-white/70">
+                  Join the waitlist for US/UK launch updates and early access.
+                </p>
+              </div>
+              <WaitlistForm source="whatsapp_page_bottom" buttonLabel="Join the waitlist" />
+            </div>
+          </div>
         </section>
       </main>
-
       <Footer />
     </div>
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://knexo.com';
-
-export const metadata: Metadata = {
-  title: 'kNexo Gamified Budgeting — Turn Saving into a Game (US/UK)',
-  description:
-    'A gamified budgeting app with missions, XP, streaks, and rewards — powered by AI and built for daily consistency. Join the kNexo waitlist.',
-  alternates: { canonical: '/gamified-budgeting' },
-  openGraph: {
-    title: 'kNexo Gamified Budgeting',
-    description: 'Turn saving into a game: missions, XP, streaks, levels — with proactive AI.',
-    url: `${siteUrl}/gamified-budgeting`,
-    images: [{ url: '/og/knexo-og.png', width: 1200, height: 630, alt: 'kNexo' }],
-    type: 'website',
-  },
-};
-
-function Badge({ text }: { text: string }) {
-  return (
-    <span class="inline-flex items-center rounded-full border border-white/12 bg-white/5 px-3 py-1 text-xs font-semibold text-white/80">
-      {text}
-    </span>
   );
 
-  const pageUrl = `${siteUrl}/gamified-budgeting`;
-
-  const faqs = [
-    { q: 'Is this just badges?', a: 'No. kNexo uses missions, XP, streaks, and levels tied to real behaviors (spending caps, savings actions, reviews).' },
-    { q: 'Can couples play together?', a: 'Yes. Household missions and shared goals are built-in.' },
-  ];
-
+function Bubble({ from, text }: { from: "user" | "ai"; text: string }) {
+  const isUser = from === "user";
   return (
-    <div class="min-h-screen">
-      <Schema
-        json={productSchema(
-          pageUrl,
-          'kNexo Gamified Budgeting',
-          'A gamified budgeting app with missions, XP, streaks, and rewards — powered by AI and built for daily consistency.'
-        )}
-      />
-      <Schema json={faqSchema(pageUrl, faqs)} />
-
-      <Navbar ctaHref="#waitlist" />
-
-      <main>
-        <!-- Hero -->
-        <section class="relative overflow-hidden">
-          <div class="pointer-events-none absolute inset-0">
-            <div class="absolute -top-40 left-10 h-[520px] w-[520px] rounded-full bg-[#FECA57]/12 blur-3xl" />
-            <div class="absolute -bottom-40 right-10 h-[520px] w-[520px] rounded-full bg-[#6C5CE7]/22 blur-3xl" />
-          </div>
-
-          <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 md:grid-cols-2 md:px-6 md:py-20">
-            <div class="relative">
-              <div class="flex flex-wrap gap-2">
-                <Badge text="Missions" />
-                <Badge text="XP" />
-                <Badge text="Streaks" />
-                <Badge text="Levels" />
-                <Badge text="Rewards" />
-              </div>
-
-              <h1 class="mt-5 text-4xl font-semibold tracking-tight text-white md:text-5xl">
-                Turn saving into a <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#FECA57] to-[#00D2D3]">game</span>.
-              </h1>
-
-              <p class="mt-4 text-base leading-relaxed text-white/75 md:text-lg">
-                kNexo makes budgeting consistent with missions you can actually complete — plus XP, levels, and streaks that reinforce real money habits.
-              </p>
-
-              <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <CTAButton href="#waitlist" variant="primary" eventParams={{ location: 'hero_gamification' }}>
-                  Join the waitlist
-                </CTAButton>
-                <p class="text-sm text-white/60">Designed for US & UK users.</p>
-              </div>
-            </div>
-
-            <!-- Visual journey -->
-            <div class="relative">
-              <div class="rounded-2xl border border-white/12 bg-white/[0.04] p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_30px_80px_rgba(0,0,0,0.45)]">
-                <div class="flex items-center justify-between">
-                  <div class="text-sm font-semibold text-white">Progress</div>
-                  <div class="text-xs text-white/55">Example</div>
-                </div>
-
-                <div class="mt-5 rounded-xl border border-white/10 bg-[#0A0A23]/35 p-4">
-                  <div class="flex items-center justify-between">
-                    <div class="text-xs text-white/60">Level 4</div>
-                    <div class="text-xs font-semibold text-[#CFFBFB]">840 / 1200 XP</div>
-                  </div>
-                  <div class="mt-2 h-2 w-full rounded-full bg-white/8">
-                    <div class="h-2 w-[70%] rounded-full bg-gradient-to-r from-[#FECA57] via-[#6C5CE7] to-[#00D2D3]" />
-                  </div>
-
-                  <div class="mt-4 grid grid-cols-3 gap-3">
-                    {[
-                      { t: 'Streak', v: '8 days' },
-                      { t: 'Missions', v: '3 active' },
-                      { t: 'Rewards', v: '2 unlocked' },
-                    ].map((s) => (
-                      <div key={s.t} class="rounded-xl border border-white/10 bg-white/[0.04] p-3">
-                        <div class="text-xs text-white/55">{s.t}</div>
-                        <div class="text-sm font-semibold text-white">{s.v}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div class="mt-5 grid gap-3">
-                  {[
-                    { t: 'Mission: “No takeout Tuesday”', d: '+150 XP · Ends in 18h' },
-                    { t: 'Mission: “Review subscriptions”', d: '+250 XP · Find 1 cancel' },
-                    { t: 'Mission: “Weekly money check-in”', d: '+120 XP · 5 min' },
-                  ].map((m) => (
-                    <div key={m.t} class="rounded-xl border border-white/10 bg-white/[0.04] p-4">
-                      <div class="text-sm font-semibold text-white">{m.t}</div>
-                      <div class="mt-1 text-xs text-white/60">{m.d}</div>
-                    </div>
-                  ))}
-                </div>
-
-                <div class="mt-4 text-xs text-white/45">
-                  <!-- Visual: badges, XP bar, level card -->
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Sections: how to earn points, levels, rewards -->
-        <section class="mx-auto max-w-6xl px-4 py-14 md:px-6">
-          <h2 class="text-2xl font-semibold tracking-tight text-white md:text-3xl">How you earn points</h2>
-          <p class="mt-2 text-sm text-white/70">Reward behaviors that actually move the needle.</p>
-
-          <div class="mt-8 grid gap-4 md:grid-cols-3">
-            {[
-              { t: 'Log spending consistently', d: 'Daily capture via WhatsApp builds awareness automatically.' },
-              { t: 'Complete missions', d: 'Small, winnable actions: caps, reviews, and habit swaps.' },
-              { t: 'Hit weekly goals', d: 'Savings goals and category caps that adapt to your life.' },
-            ].map((c) => (
-              <div key={c.t} class="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-                <div class="text-base font-semibold text-white">{c.t}</div>
-                <p class="mt-2 text-sm text-white/70">{c.d}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section class="mx-auto max-w-6xl px-4 py-14 md:px-6">
-          <h2 class="text-2xl font-semibold tracking-tight text-white md:text-3xl">Levels & evolution</h2>
-          <p class="mt-2 text-sm text-white/70">A clear journey from chaotic to confident.</p>
-
-          <div class="mt-8 grid gap-4 lg:grid-cols-4">
-            {[
-              { t: 'Level 1: Starter', d: 'Track basics + first weekly review.' },
-              { t: 'Level 2: Builder', d: 'Set caps + complete 2 missions.' },
-              { t: 'Level 3: Defender', d: 'Protect savings + reduce leaks.' },
-              { t: 'Level 4+: Strategist', d: 'Optimize categories + proactive goals.' },
-            ].map((l) => (
-              <div key={l.t} class="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-                <div class="text-sm font-semibold text-white">{l.t}</div>
-                <p class="mt-2 text-sm text-white/70">{l.d}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section class="mx-auto max-w-6xl px-4 py-14 md:px-6">
-          <h2 class="text-2xl font-semibold tracking-tight text-white md:text-3xl">Rewards that keep it fun</h2>
-          <p class="mt-2 text-sm text-white/70">Placeholders — customize based on partnerships.</p>
-
-          <div class="mt-8 grid gap-4 md:grid-cols-3">
-            {[
-              { t: 'Unlock themes & badges', d: 'Cosmetics that reflect progress — not pressure.' },
-              { t: 'Partner perks', d: 'Discounts or offers (future roadmap).' },
-              { t: 'Household rewards', d: 'Shared rewards for shared missions.' },
-            ].map((r) => (
-              <div key={r.t} class="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-                <div class="text-base font-semibold text-white">{r.t}</div>
-                <p class="mt-2 text-sm text-white/70">{r.d}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <!-- CTA -->
-        <section class="mx-auto max-w-6xl px-4 pb-16 md:px-6">
-          <WaitlistForm
-            source="gamification_page"
-            headline="Get gamified budgeting that actually sticks"
-            description="Join the waitlist for missions, XP, streaks, and AI nudges — built for real life."
-          />
-        </section>
-      </main>
-
-      <Footer />
+    <div class=flex ${isUser ? "justify-end" : "justify-start"}>
+      <div
+        class=max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-relaxed ring-1 ${
+          isUser ? "bg-[#6C5CE7]/20 ring-[#6C5CE7]/35" : "bg-white/5 ring-white/10 text-white/90"
+        }
+      >
+        {text}
+      </div>
     </div>
   );
 }
 
-<div class="min-h-screen">
-      <Schema
-        json={productSchema(
-          pageUrl,
-          'kNexo — AI Budgeting on WhatsApp (UK)',
-          'UK budgeting on WhatsApp with proactive AI insights, missions, XP, and shared household goals.'
-        )}
-      />
-
-      <Navbar ctaHref="#waitlist" />
-
-      <main>
-        <section class="relative overflow-hidden">
-          <div class="pointer-events-none absolute inset-0">
-            <div class="absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-[#6C5CE7]/22 blur-3xl" />
-            <div class="absolute -bottom-40 right-10 h-[520px] w-[520px] rounded-full bg-[#00D2D3]/16 blur-3xl" />
-          </div>
-
-          <div class="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
-            <p class="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-3 py-1 text-xs font-medium text-white/75">
-              <span class="h-1.5 w-1.5 rounded-full bg-[#00D2D3]" />
-              UK launch waitlist
-            </p>
-
-            <h1 class="mt-5 max-w-3xl text-4xl font-semibold tracking-tight text-white md:text-5xl">
-              A <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#8B7BFF] to-[#00D2D3]">budgeting app for the UK</span> — on WhatsApp.
-            </h1>
-
-            <p class="mt-4 max-w-2xl text-base leading-relaxed text-white/75 md:text-lg">
-              Track spending in seconds (GBP-ready). Get proactive AI insights and a gamified habit loop with missions, XP, and streaks.
-            </p>
-
-            <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <CTAButton href="#waitlist" variant="primary" eventParams={{ location: 'hero_uk' }}>
-                Join the waitlist
-              </CTAButton>
-              <p class="text-sm text-white/60">Privacy-minded. Unsubscribe anytime.</p>
-            </div>
-
-            <div class="mt-10">
-              <WaitlistForm
-                source="landing_uk"
-                locale="UK"
-                headline="Join the UK waitlist"
-                description="Be first to try WhatsApp-first budgeting with AI insights + missions, XP, and shared goals."
-              />
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <Footer />
+function Benefit({ title, desc }: { title: string; desc: string }) {
+  return (
+    <div class="rounded-3xl border border-white/10 bg-white/5 p-5">
+      <div class="text-base font-semibold">{title}</div>
+      <p class="mt-2 text-sm text-white/70">{desc}</p>
     </div>
+  );
+}
 
-<div class="min-h-screen">
-      <Schema
-        json={productSchema(
-          pageUrl,
-          'kNexo for Couples & Families',
-          'Shared budget + missions for couples and families, powered by WhatsApp-first tracking and proactive AI insights.'
-        )}
-      />
+function Row({ feature, a, b }: { feature: string; a: string; b: string }) {
+  return (
+    <tr class="border-b border-white/10 last:border-b-0">
+      <td class="px-5 py-4 font-semibold text-white/85">{feature}</td>
+      <td class="px-5 py-4">{a}</td>
+      <td class="px-5 py-4 text-white/65">{b}</td>
+    </tr>
+  );
+}
 
-      <Navbar ctaHref="#waitlist" />
+export const metadata = buildMetadata({
+  title: "kNexo Gamified Budgeting — Turn Saving into a Game (US/UK)",
+  description:
+    "A gamified budgeting app with missions, XP, levels, streaks, and rewards. Build money habits that stick — powered by WhatsApp-first tracking and AI insights.",
+  path: "/gamified-budgeting",
+});
 
-      <main>
-        <section class="relative overflow-hidden">
-          <div class="pointer-events-none absolute inset-0">
-            <div class="absolute -top-40 left-10 h-[520px] w-[520px] rounded-full bg-[#6C5CE7]/22 blur-3xl" />
-            <div class="absolute -bottom-40 right-10 h-[520px] w-[520px] rounded-full bg-[#FECA57]/12 blur-3xl" />
-          </div>
 
-          <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 md:grid-cols-2 md:px-6 md:py-20">
-            <div class="relative">
-              <h1 class="text-4xl font-semibold tracking-tight text-white md:text-5xl">
-                Shared money, fewer fights — <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#FECA57] to-[#00D2D3]">one household game plan</span>.
+  return (
+    <div class="min-h-dvh">
+      <Navbar ctaHref="#waitlist" ctaLabel="Join the waitlist" />
+      <main class="mx-auto max-w-6xl px-4 md:px-6">
+        <OrganizationJsonLd />
+        <ProductJsonLd
+          name="kNexo Gamified Budgeting"
+          description="Gamified budgeting with missions, XP, levels, streaks, and rewards — powered by WhatsApp-first AI."
+        />
+        <FaqJsonLd
+          faqs={[
+            {
+              question: "What makes kNexo a gamified budgeting app?",
+              answer:
+                "kNexo uses missions, XP, levels, streaks, and rewards tied to real money behaviors (like weekly caps and no-spend challenges).",
+            },
+            {
+              question: "Is it just badges?",
+              answer:
+                "No. The system is designed as a habit loop: clear missions, immediate feedback, and progression that reinforces consistency.",
+            },
+          ]}
+        />
+
+        <!-- Hero -->
+        <section class="pt-14 pb-10 md:pt-20">
+          <div class="grid gap-10 md:grid-cols-2 md:items-center">
+            <div>
+              <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
+                <span class="h-2 w-2 rounded-full bg-[#FECA57] shadow-[0_0_18px_rgba(254,202,87,0.55)]" />
+                Missions • XP • Levels • Rewards
+              </div>
+
+              <h1 class="h-hero mt-5 text-4xl font-extrabold leading-tight tracking-tight md:text-5xl">
+                Turn saving into a 
+                <span class="bg-gradient-to-r from-[#FECA57] via-white to-[#00D2D3] bg-clip-text text-transparent">
+                  game you can win
+                </span>
+                .
               </h1>
-              <p class="mt-4 text-base leading-relaxed text-white/75 md:text-lg">
-                kNexo brings couples and families a shared budget with missions, XP, and proactive AI insights — all through a WhatsApp-first flow.
+              <p class="mt-4 text-base text-white/75 md:text-lg">
+                kNexo keeps you consistent with real missions and progression — powered by WhatsApp-first tracking and proactive AI insights.
               </p>
 
-              <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <CTAButton href="#waitlist" variant="primary" eventParams={{ location: 'hero_couples' }}>
-                  Join the waitlist
-                </CTAButton>
-                <p class="text-sm text-white/60">Built for US & UK households.</p>
-              </div>
-
-              <div class="mt-8 grid gap-4 sm:grid-cols-2">
-                {[
-                  { t: 'Shared visibility', d: 'Know where money goes without interrogations.' },
-                  { t: 'Shared missions', d: 'Turn “we should save” into small weekly wins.' },
-                  { t: 'Role-based goals', d: 'Personal goals + household goals in one place.' },
-                  { t: 'Proactive alerts', d: 'Catch drift early — before it becomes stress.' },
-                ].map((x) => (
-                  <div key={x.t} class="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-                    <div class="text-base font-semibold text-white">{x.t}</div>
-                    <p class="mt-2 text-sm text-white/70">{x.d}</p>
-                  </div>
-                ))}
+              <div class="mt-7" id="waitlist">
+                <WaitlistForm source="gamification_page" buttonLabel="Join the waitlist" />
               </div>
             </div>
 
+            <!-- Visual: badges / XP / levels -->
             <div class="relative">
-              <div class="rounded-2xl border border-white/12 bg-white/[0.04] p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_30px_80px_rgba(0,0,0,0.45)]">
-                <div class="text-sm font-semibold text-white">Household journey (example)</div>
-                <div class="mt-4 space-y-3">
-                  {[
-                    { t: 'Set shared goal', d: 'Save $300 / £250 this month' },
-                    { t: 'Pick missions', d: '“No delivery week” + “Subscription sweep”' },
-                    { t: 'Track via WhatsApp', d: 'Both partners log spending in seconds' },
-                    { t: 'Celebrate wins', d: 'XP, streaks, and a clear weekly recap' },
-                  ].map((s) => (
-                    <div key={s.t} class="rounded-xl border border-white/10 bg-white/[0.04] p-4">
-                      <div class="text-sm font-semibold text-white">{s.t}</div>
-                      <div class="mt-1 text-xs text-white/60">{s.d}</div>
+              <div class="rounded-3xl border border-white/10 bg-gradient-to-b from-white/10 to-white/5 p-6">
+                <div class="flex items-center justify-between">
+                  <div class="text-sm font-semibold">Progress preview</div>
+                  <div class="text-xs text-white/60">Placeholder</div>
+                </div>
+
+                <div class="mt-5 grid gap-4">
+                  <div class="rounded-2xl border border-white/10 bg-[#0A0A23] p-4">
+                    <div class="flex items-center justify-between text-sm">
+                      <div class="font-semibold">Level 7 — Budget Ranger</div>
+                      <div class="text-white/60">1,420 / 1,800 XP</div>
                     </div>
-                  ))}
+                    <div class="mt-3 h-2 rounded-full bg-white/10">
+                      <div class="h-2 w-[78%] rounded-full bg-gradient-to-r from-[#6C5CE7] to-[#00D2D3]" />
+                    </div>
+                    <div class="mt-3 flex flex-wrap gap-2">
+                      <Badge label="3-day streak" />
+                      <Badge label="No-spend mission" />
+                      <Badge label="Weekly review" />
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-3 gap-3">
+                    <CardStat label="Missions" value="Daily" />
+                    <CardStat label="Rewards" value="Real" />
+                    <CardStat label="Insights" value="AI" />
+                  </div>
                 </div>
-                <div class="mt-4 text-xs text-white/45"><!-- Visual: shared goal card + missions --></div>
               </div>
+
+              <div class="pointer-events-none absolute -inset-6 -z-10 rounded-[2.5rem] bg-gradient-to-r from-[#FECA57]/18 via-transparent to-[#6C5CE7]/18 blur-2xl" />
             </div>
           </div>
         </section>
 
-        <section class="mx-auto max-w-6xl px-4 pb-16 md:px-6">
-          <WaitlistForm
-            source="couples_families"
-            headline="Get shared budgeting that actually sticks"
-            description="Join the waitlist for couples & families: shared goals, missions, and AI nudges — WhatsApp-first."
-          />
+        <!-- How to earn points -->
+        <section class="py-12">
+          <h2 class="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">How you earn points</h2>
+          <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <Tile title="Log spending" desc="Every logged expense builds your timeline (+XP)." />
+            <Tile title="Complete missions" desc="No-spend days, caps, weekly reviews (+big XP)." />
+            <Tile title="Hit streaks" desc="Consistency multiplies progress and momentum." />
+            <Tile title="Improve categories" desc="Tighten one category for 7 days and level up." />
+            <Tile title="Household teamwork" desc="Shared missions for couples & families." />
+            <Tile title="AI challenges" desc="Proactive suggestions turn into optional quests." />
+          </div>
+        </section>
+
+        <!-- Levels -->
+        <section class="py-12">
+          <h2 class="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">Levels of evolution</h2>
+          <div class="mt-6 grid gap-4 md:grid-cols-4">
+            <Level name="Starter" perk="First budget + first mission" />
+            <Level name="Tracker" perk="Weekly caps + streaks" />
+            <Level name="Optimizer" perk="AI insights + smarter goals" />
+            <Level name="Hero" perk="Shared wins + long-term momentum" />
+          </div>
+        </section>
+
+        <!-- Rewards -->
+        <section class="py-12">
+          <h2 class="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">Rewards that reinforce habits</h2>
+          <div class="mt-8 grid gap-4 md:grid-cols-3">
+            <Reward title="Unlock new missions" desc="Progress opens more tailored challenges." />
+            <Reward title="Streak boosts" desc="Consistency makes future missions easier to complete." />
+            <Reward title="Real-world perks" desc="Placeholder for partner perks/coupons at launch." />
+          </div>
+        </section>
+
+        <!-- Journey visual -->
+        <section class="py-12">
+          <h2 class="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">Your journey</h2>
+          <div class="mt-6 rounded-3xl border border-white/10 bg-white/5 p-6">
+            <ol class="grid gap-4 md:grid-cols-4">
+              <JourneyStep title="Day 1" desc="Text 3 expenses → instant clarity" />
+              <JourneyStep title="Week 1" desc="Set caps + complete 1 mission" />
+              <JourneyStep title="Week 2" desc="AI finds patterns + saves you money" />
+              <JourneyStep title="Month 1" desc="Streaks + levels make it automatic" />
+            </ol>
+          </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="py-14">
+          <div class="rounded-3xl border border-white/10 bg-gradient-to-r from-white/10 to-white/5 p-7 md:p-10">
+            <div class="grid gap-8 md:grid-cols-2 md:items-center">
+              <div>
+                <h2 class="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">Ready to make money habits stick?</h2>
+                <p class="mt-3 text-white/70">Join the waitlist for US/UK launch updates and early access.</p>
+              </div>
+              <WaitlistForm source="gamification_page_bottom" buttonLabel="Join the waitlist" />
+            </div>
+          </div>
         </section>
       </main>
-
       <Footer />
     </div>
+  );
 
-<div class="min-h-screen">
-      <Schema
-        json={productSchema(
-          pageUrl,
-          'kNexo — AI Money Coach on WhatsApp',
-          'Proactive AI money coaching via WhatsApp: alerts, recaps, and next-best actions, plus gamified missions and shared goals.'
-        )}
-      />
+function Badge({ label }: { label: string }) {
+  return <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">{label}</span>;
+}
+function CardStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div class="rounded-2xl border border-white/10 bg-white/5 px-3 py-3 text-center">
+      <div class="text-xs text-white/60">{label}</div>
+      <div class="mt-1 text-sm font-semibold">{value}</div>
+    </div>
+  );
+}
+function Tile({ title, desc }: { title: string; desc: string }) {
+  return (
+    <div class="rounded-3xl border border-white/10 bg-white/5 p-5">
+      <div class="text-base font-semibold">{title}</div>
+      <p class="mt-2 text-sm text-white/70">{desc}</p>
+    </div>
+  );
+}
+function Level({ name, perk }: { name: string; perk: string }) {
+  return (
+    <div class="rounded-3xl border border-white/10 bg-white/5 p-5">
+      <div class="text-sm font-semibold text-white">{name}</div>
+      <p class="mt-2 text-sm text-white/70">{perk}</p>
+    </div>
+  );
+}
+function Reward({ title, desc }: { title: string; desc: string }) {
+  return (
+    <div class="rounded-3xl border border-white/10 bg-white/5 p-5">
+      <div class="text-base font-semibold">{title}</div>
+      <p class="mt-2 text-sm text-white/70">{desc}</p>
+    </div>
+  );
+}
+function JourneyStep({ title, desc }: { title: string; desc: string }) {
+  return (
+    <li class="rounded-2xl border border-white/10 bg-[#0A0A23] p-4">
+      <div class="text-sm font-semibold">{title}</div>
+      <div class="mt-2 text-sm text-white/70">{desc}</div>
+    </li>
+  );
+}
 
-      <Navbar ctaHref="#waitlist" />
+<div class="min-h-dvh">
+      <Navbar ctaHref="#waitlist" ctaLabel="Join the waitlist" />
+      <main class="mx-auto max-w-6xl px-4 md:px-6">
+        <OrganizationJsonLd />
+        <ProductJsonLd
+          name="kNexo — AI Budgeting on WhatsApp (UK)"
+          description="WhatsApp-first AI budgeting for the UK with gamification and shared finances."
+        />
 
-      <main>
-        <section class="relative overflow-hidden">
-          <div class="pointer-events-none absolute inset-0">
-            <div class="absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-[#00D2D3]/18 blur-3xl" />
-            <div class="absolute -bottom-40 right-10 h-[520px] w-[520px] rounded-full bg-[#6C5CE7]/22 blur-3xl" />
-          </div>
-
-          <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 md:grid-cols-2 md:px-6 md:py-20">
-            <div class="relative">
-              <h1 class="text-4xl font-semibold tracking-tight text-white md:text-5xl">
-                Your <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#00D2D3] to-[#8B7BFF]">AI money coach</span> — in WhatsApp.
+        <section class="pt-14 pb-10 md:pt-20">
+          <div class="grid gap-10 md:grid-cols-2 md:items-center">
+            <div>
+              <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
+                <span class="h-2 w-2 rounded-full bg-[#00D2D3]" />
+                UK launch waitlist — privacy-minded
+              </div>
+              <h1 class="h-hero mt-5 text-4xl font-extrabold leading-tight tracking-tight md:text-5xl">
+                Budgeting on 
+                <span class="bg-gradient-to-r from-[#6C5CE7] to-[#00D2D3] bg-clip-text text-transparent">
+                  WhatsApp
+                </span>
+                , powered by AI.
               </h1>
-              <p class="mt-4 text-base leading-relaxed text-white/75 md:text-lg">
-                kNexo doesn’t just answer questions. It proactively alerts you, summarizes your week, and suggests the next best action — with missions and XP to keep you consistent.
+              <p class="mt-4 text-base text-white/75 md:text-lg">
+                Track spending in seconds (in pounds), get proactive insights, and build habits with missions, XP, and rewards.
               </p>
 
-              <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <CTAButton href="#waitlist" variant="primary" eventParams={{ location: 'hero_coach' }}>
-                  Join the waitlist
-                </CTAButton>
-                <p class="text-sm text-white/60">Coaching that fits real life.</p>
+              <div class="mt-7" id="waitlist">
+                <WaitlistForm source="landing_uk" buttonLabel="Join the waitlist" />
               </div>
 
-              <div class="mt-8 grid gap-4 sm:grid-cols-2">
-                {[
-                  { t: 'Proactive alerts', d: 'Catch overspending early with gentle nudges.' },
-                  { t: 'Weekly recaps', d: 'Clear summaries you’ll actually read.' },
-                  { t: 'Next best action', d: 'One small step, right now — not 20 charts.' },
-                  { t: 'Habit reinforcement', d: 'Missions + XP keep momentum going.' },
-                ].map((x) => (
-                  <div key={x.t} class="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-                    <div class="text-base font-semibold text-white">{x.t}</div>
-                    <p class="mt-2 text-sm text-white/70">{x.d}</p>
-                  </div>
-                ))}
+              <div class="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-white/70">
+                Security & privacy: we’re building with a security-first mindset. Full details will be published before launch.
               </div>
             </div>
 
-            <div class="relative">
-              <div class="rounded-2xl border border-white/12 bg-white/[0.04] p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_30px_80px_rgba(0,0,0,0.45)]">
-                <div class="text-sm font-semibold text-white">Coach preview (mock)</div>
-                <div class="mt-4 space-y-3">
-                  <div class="max-w-[92%] rounded-2xl rounded-tl-sm bg-white/8 px-4 py-3 text-sm text-white/85 ring-1 ring-white/10">
-                    Heads up: Dining is trending +22% vs last week. Want a 3-day micro-mission to rebalance?
-                  </div>
-                  <div class="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-[#6C5CE7]/22 px-4 py-3 text-sm text-white/90 ring-1 ring-white/10">
-                    Yes. Keep it easy.
-                  </div>
-                  <div class="max-w-[92%] rounded-2xl rounded-tl-sm bg-white/8 px-4 py-3 text-sm text-white/85 ring-1 ring-white/10">
-                    Mission: “Swap 1 meal” (+120 XP). If you complete it, you’ll likely save $18–$30 / £15–£25.
-                  </div>
-                </div>
-                <div class="mt-4 text-xs text-white/45"><!-- Visual: AI coach conversation --></div>
+            <div class="rounded-3xl border border-white/10 bg-gradient-to-b from-white/10 to-white/5 p-5">
+              <div class="text-sm font-semibold">Example</div>
+              <div class="mt-4 rounded-2xl bg-[#0A0A23] ring-1 ring-white/10 p-4 text-sm text-white/80">
+                <p class="text-white/60">You:</p>
+                <p class="mt-1">“Groceries £38.40”</p>
+                <p class="mt-4 text-white/60">kNexo:</p>
+                <p class="mt-1">“Logged. You’re on track for your weekly food budget. Want a £60 cap?”</p>
               </div>
             </div>
           </div>
         </section>
+      </main>
+      <Footer />
+    </div>
 
-        <section class="mx-auto max-w-6xl px-4 pb-16 md:px-6">
-          <WaitlistForm
-            source="ai_money_coach"
-            headline="Get proactive AI coaching"
-            description="Join the waitlist for alerts, recaps, and next-best actions — delivered through WhatsApp."
-          />
+export const metadata = buildMetadata({
+  title: "kNexo for Couples & Families — Shared Budget + Missions (US/UK)",
+  description:
+    "A budget app for couples and families: shared visibility, shared goals, and shared missions with XP and rewards — powered by WhatsApp-first AI.",
+  path: "/couples-family-budget",
+});
+
+
+  return (
+    <div class="min-h-dvh">
+      <Navbar ctaHref="#waitlist" ctaLabel="Join the waitlist" />
+      <main class="mx-auto max-w-6xl px-4 md:px-6">
+        <OrganizationJsonLd />
+        <ProductJsonLd
+          name="kNexo for Couples & Families"
+          description="Shared budgets + shared missions with WhatsApp-first AI and gamification."
+        />
+        <FaqJsonLd
+          faqs={[
+            {
+              question: "Is kNexo a budget app for couples?",
+              answer:
+                "Yes. kNexo is built with couples & families mode for shared visibility, shared goals, and shared missions.",
+            },
+            {
+              question: "How does shared budgeting work?",
+              answer:
+                "You can align on caps and goals, then track spending via WhatsApp while kNexo keeps both people updated with summaries and nudges.",
+            },
+          ]}
+        />
+
+        <section class="pt-14 pb-10 md:pt-20">
+          <div class="grid gap-10 md:grid-cols-2 md:items-center">
+            <div>
+              <h1 class="h-hero text-4xl font-extrabold leading-tight tracking-tight md:text-5xl">
+                Shared money, without the spreadsheets — 
+                <span class="bg-gradient-to-r from-[#6C5CE7] to-[#00D2D3] bg-clip-text text-transparent">
+                  built for couples
+                </span> 
+                & families.
+              </h1>
+              <p class="mt-4 text-base text-white/75 md:text-lg">
+                See the household picture, agree on goals, and complete missions together. kNexo keeps it simple on WhatsApp.
+              </p>
+
+              <div class="mt-7" id="waitlist">
+                <WaitlistForm source="couples_families_page" buttonLabel="Join the waitlist" />
+              </div>
+            </div>
+
+            <div class="rounded-3xl border border-white/10 bg-white/5 p-6">
+              <div class="grid gap-4">
+                <Card title="Shared goals" desc="One plan for the household — clear caps and targets." />
+                <Card title="Shared missions" desc="Team challenges that build habits together." />
+                <Card title="Less money stress" desc="Proactive nudges reduce surprises and arguments." />
+              </div>
+            </div>
+          </div>
         </section>
       </main>
-
       <Footer />
     </div>
+  );
 
-<div class="min-h-screen">
-      <Navbar ctaHref="/#waitlist" />
-      <main class="mx-auto max-w-3xl px-4 py-14 md:px-6">
-        <h1 class="text-3xl font-semibold text-white">Privacy Policy</h1>
-        <p class="mt-4 text-sm text-white/70">
-          Placeholder. Add your final privacy policy here (data handling, retention, user rights, contact).
-        </p>
+function Card({ title, desc }: { title: string; desc: string }) {
+  return (
+    <div class="rounded-2xl border border-white/10 bg-[#0A0A23] p-4">
+      <div class="text-sm font-semibold">{title}</div>
+      <p class="mt-2 text-sm text-white/70">{desc}</p>
+    </div>
+  );
+}
+
+<div class="min-h-dvh">
+      <Navbar ctaHref="#waitlist" ctaLabel="Join the waitlist" />
+      <main class="mx-auto max-w-6xl px-4 md:px-6">
+        <OrganizationJsonLd />
+        <ProductJsonLd
+          name="kNexo — AI Money Coach"
+          description="Proactive AI money coaching on WhatsApp with missions, XP, and shared finances."
+        />
+
+        <section class="pt-14 pb-10 md:pt-20">
+          <div class="grid gap-10 md:grid-cols-2 md:items-center">
+            <div>
+              <h1 class="h-hero text-4xl font-extrabold leading-tight tracking-tight md:text-5xl">
+                Your 
+                <span class="bg-gradient-to-r from-[#6C5CE7] to-[#00D2D3] bg-clip-text text-transparent">
+                  AI money coach
+                </span> 
+                — right on WhatsApp.
+              </h1>
+              <p class="mt-4 text-base text-white/75 md:text-lg">
+                kNexo doesn’t just answer questions — it proactively flags risks, suggests missions, and keeps you on track week after week.
+              </p>
+              <div class="mt-7" id="waitlist">
+                <WaitlistForm source="ai_money_coach_page" buttonLabel="Join the waitlist" />
+              </div>
+            </div>
+
+            <div class="rounded-3xl border border-white/10 bg-gradient-to-b from-white/10 to-white/5 p-5">
+              <div class="text-sm font-semibold">Proactive alert (mock)</div>
+              <div class="mt-4 rounded-2xl bg-[#0A0A23] ring-1 ring-white/10 p-4 text-sm text-white/80">
+                <p class="text-white/60">kNexo:</p>
+                <p class="mt-1">
+                  “Heads up: subscriptions are up 18% this month. Want a 10-minute audit mission to cut £/$15–£/$40?”
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
       <Footer />
     </div>
 
-<div class="min-h-screen">
-      <Navbar ctaHref="/#waitlist" />
-      <main class="mx-auto max-w-3xl px-4 py-14 md:px-6">
-        <h1 class="text-3xl font-semibold text-white">Terms of Service</h1>
-        <p class="mt-4 text-sm text-white/70">
-          Placeholder. Add your final terms here (acceptable use, disclaimers, limitations, etc.).
-        </p>
-      </main>
-      <Footer />
-    </div>
+const base = process.env.NEXT_PUBLIC_SITE_URL || "https://knexo.com";
+  const now = new Date();
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://knexo.com';
-
-  const routes = [
-    '',
-    '/uk',
-    '/whatsapp-expense-tracker',
-    '/gamified-budgeting',
-    '/couples-families',
-    '/ai-money-coach',
-    '/privacy',
-    '/terms',
-  ];
+  const routes = ["/", "/uk", "/couples-family-budget", "/gamified-budgeting", "/whatsapp-expense-tracker", "/ai-money-coach"];
 
   return routes.map((path) => ({
-    url: `${baseUrl}${path}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: path === '' ? 1 : 0.8,
+    url: `${base}${path}`,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: path === "/" ? 1 : 0.8,
   }));
-
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://knexo.com';
-  return {
-    rules: [{ userAgent: '*', allow: '/' }],
-    sitemap: `${baseUrl}/sitemap.xml`,
-  };
 </body>
 </html>

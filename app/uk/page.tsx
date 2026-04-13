@@ -1,82 +1,65 @@
-import type { Metadata } from 'next';
-import { Navbar } from '@/components/Navbar';
-import { Footer } from '@/components/Footer';
-import { CTAButton } from '@/components/CTAButton';
-import { WaitlistForm } from '@/components/WaitlistForm';
-import { Schema } from '@/components/Schema';
-import { productSchema } from '@/lib/schema';
+import { Navbar } from "@/components/shared/Navbar";
+import { Footer } from "@/components/shared/Footer";
+import { WaitlistForm } from "@/components/forms/WaitlistForm";
+import { buildMetadata, OrganizationJsonLd, ProductJsonLd } from "@/lib/seo";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://knexo.com';
-
-export const metadata: Metadata = {
-  title: 'kNexo — AI Budgeting on WhatsApp (UK) | Join the Waitlist',
+export const metadata = buildMetadata({
+  title: "kNexo — AI Budgeting on WhatsApp (UK) | Join the Waitlist",
   description:
-    'A budgeting app for the UK that works on WhatsApp. Track spending in seconds, get proactive AI insights, and stay consistent with missions, XP, and rewards. Join the UK waitlist.',
-  alternates: { canonical: '/uk' },
-  openGraph: {
-    title: 'kNexo — AI Budgeting on WhatsApp (UK)',
-    description: 'WhatsApp-first budgeting for the UK (GBP-ready) with AI insights + gamification.',
-    url: `${siteUrl}/uk`,
-    images: [{ url: '/og/knexo-og.png', width: 1200, height: 630, alt: 'kNexo' }],
-    type: 'website',
-  },
-};
+    "A budgeting app for the UK that works on WhatsApp. Track spending in seconds, get AI insights, and stay consistent with missions, XP, and rewards. Join the UK waitlist.",
+  path: "/uk",
+});
 
-export default function Page() {
-  const pageUrl = `${siteUrl}/uk`;
-
+export default function UKLanding() {
   return (
-    <div className="min-h-screen">
-      <Schema
-        json={productSchema(
-          pageUrl,
-          'kNexo — AI Budgeting on WhatsApp (UK)',
-          'UK budgeting on WhatsApp with proactive AI insights, missions, XP, and shared household goals.'
-        )}
-      />
+    <div className="min-h-dvh">
+      <Navbar ctaHref="#waitlist" ctaLabel="Join the waitlist" />
+      <main className="mx-auto max-w-6xl px-4 md:px-6">
+        <OrganizationJsonLd />
+        <ProductJsonLd
+          name="kNexo — AI Budgeting on WhatsApp (UK)"
+          description="WhatsApp-first AI budgeting for the UK with gamification and shared finances."
+        />
 
-      <Navbar ctaHref="#waitlist" />
+        <section className="pt-14 pb-10 md:pt-20">
+          <div className="grid gap-10 md:grid-cols-2 md:items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
+                <span className="h-2 w-2 rounded-full bg-[#00D2D3]" />
+                UK launch waitlist — privacy-minded
+              </div>
+              <h1 className="h-hero mt-5 text-4xl font-extrabold leading-tight tracking-tight md:text-5xl">
+                Budgeting on{" "}
+                <span className="bg-gradient-to-r from-[#6C5CE7] to-[#00D2D3] bg-clip-text text-transparent">
+                  WhatsApp
+                </span>
+                , powered by AI.
+              </h1>
+              <p className="mt-4 text-base text-white/75 md:text-lg">
+                Track spending in seconds (in pounds), get proactive insights, and build habits with missions, XP, and rewards.
+              </p>
 
-      <main>
-        <section className="relative overflow-hidden">
-          <div className="pointer-events-none absolute inset-0">
-            <div className="absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-[#6C5CE7]/22 blur-3xl" />
-            <div className="absolute -bottom-40 right-10 h-[520px] w-[520px] rounded-full bg-[#00D2D3]/16 blur-3xl" />
-          </div>
+              <div className="mt-7" id="waitlist">
+                <WaitlistForm source="landing_uk" buttonLabel="Join the waitlist" />
+              </div>
 
-          <div className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
-            <p className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-3 py-1 text-xs font-medium text-white/75">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#00D2D3]" />
-              UK launch waitlist
-            </p>
-
-            <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-tight text-white md:text-5xl">
-              A <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#8B7BFF] to-[#00D2D3]">budgeting app for the UK</span> — on WhatsApp.
-            </h1>
-
-            <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/75 md:text-lg">
-              Track spending in seconds (GBP-ready). Get proactive AI insights and a gamified habit loop with missions, XP, and streaks.
-            </p>
-
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <CTAButton href="#waitlist" variant="primary" eventParams={{ location: 'hero_uk' }}>
-                Join the waitlist
-              </CTAButton>
-              <p className="text-sm text-white/60">Privacy-minded. Unsubscribe anytime.</p>
+              <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-white/70">
+                Security & privacy: we’re building with a security-first mindset. Full details will be published before launch.
+              </div>
             </div>
 
-            <div className="mt-10">
-              <WaitlistForm
-                source="landing_uk"
-                locale="UK"
-                headline="Join the UK waitlist"
-                description="Be first to try WhatsApp-first budgeting with AI insights + missions, XP, and shared goals."
-              />
+            <div className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/10 to-white/5 p-5">
+              <div className="text-sm font-semibold">Example</div>
+              <div className="mt-4 rounded-2xl bg-[#0A0A23] ring-1 ring-white/10 p-4 text-sm text-white/80">
+                <p className="text-white/60">You:</p>
+                <p className="mt-1">“Groceries £38.40”</p>
+                <p className="mt-4 text-white/60">kNexo:</p>
+                <p className="mt-1">“Logged. You’re on track for your weekly food budget. Want a £60 cap?”</p>
+              </div>
             </div>
           </div>
         </section>
       </main>
-
       <Footer />
     </div>
   );

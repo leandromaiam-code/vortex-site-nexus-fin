@@ -1,23 +1,15 @@
-import type { MetadataRoute } from 'next';
+import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://knexo.com';
+  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://knexo.com";
+  const now = new Date();
 
-  const routes = [
-    '',
-    '/uk',
-    '/whatsapp-expense-tracker',
-    '/gamified-budgeting',
-    '/couples-families',
-    '/ai-money-coach',
-    '/privacy',
-    '/terms',
-  ];
+  const routes = ["/", "/uk", "/couples-family-budget", "/gamified-budgeting", "/whatsapp-expense-tracker", "/ai-money-coach"];
 
   return routes.map((path) => ({
-    url: `${baseUrl}${path}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: path === '' ? 1 : 0.8,
+    url: `${base}${path}`,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: path === "/" ? 1 : 0.8,
   }));
 }

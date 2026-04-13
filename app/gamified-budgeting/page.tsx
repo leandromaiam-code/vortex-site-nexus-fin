@@ -1,209 +1,207 @@
-import type { Metadata } from 'next';
-import { Navbar } from '@/components/Navbar';
-import { Footer } from '@/components/Footer';
-import { WaitlistForm } from '@/components/WaitlistForm';
-import { CTAButton } from '@/components/CTAButton';
-import { Schema } from '@/components/Schema';
-import { faqSchema, productSchema } from '@/lib/schema';
+import { Navbar } from "@/components/shared/Navbar";
+import { Footer } from "@/components/shared/Footer";
+import { WaitlistForm } from "@/components/forms/WaitlistForm";
+import { buildMetadata, FaqJsonLd, OrganizationJsonLd, ProductJsonLd } from "@/lib/seo";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://knexo.com';
-
-export const metadata: Metadata = {
-  title: 'kNexo Gamified Budgeting — Turn Saving into a Game (US/UK)',
+export const metadata = buildMetadata({
+  title: "kNexo Gamified Budgeting — Turn Saving into a Game (US/UK)",
   description:
-    'A gamified budgeting app with missions, XP, streaks, and rewards — powered by AI and built for daily consistency. Join the kNexo waitlist.',
-  alternates: { canonical: '/gamified-budgeting' },
-  openGraph: {
-    title: 'kNexo Gamified Budgeting',
-    description: 'Turn saving into a game: missions, XP, streaks, levels — with proactive AI.',
-    url: `${siteUrl}/gamified-budgeting`,
-    images: [{ url: '/og/knexo-og.png', width: 1200, height: 630, alt: 'kNexo' }],
-    type: 'website',
-  },
-};
+    "A gamified budgeting app with missions, XP, levels, streaks, and rewards. Build money habits that stick — powered by WhatsApp-first tracking and AI insights.",
+  path: "/gamified-budgeting",
+});
 
-function Badge({ text }: { text: string }) {
+export default function GamificationPage() {
   return (
-    <span className="inline-flex items-center rounded-full border border-white/12 bg-white/5 px-3 py-1 text-xs font-semibold text-white/80">
-      {text}
-    </span>
-  );
-}
+    <div className="min-h-dvh">
+      <Navbar ctaHref="#waitlist" ctaLabel="Join the waitlist" />
+      <main className="mx-auto max-w-6xl px-4 md:px-6">
+        <OrganizationJsonLd />
+        <ProductJsonLd
+          name="kNexo Gamified Budgeting"
+          description="Gamified budgeting with missions, XP, levels, streaks, and rewards — powered by WhatsApp-first AI."
+        />
+        <FaqJsonLd
+          faqs={[
+            {
+              question: "What makes kNexo a gamified budgeting app?",
+              answer:
+                "kNexo uses missions, XP, levels, streaks, and rewards tied to real money behaviors (like weekly caps and no-spend challenges).",
+            },
+            {
+              question: "Is it just badges?",
+              answer:
+                "No. The system is designed as a habit loop: clear missions, immediate feedback, and progression that reinforces consistency.",
+            },
+          ]}
+        />
 
-export default function Page() {
-  const pageUrl = `${siteUrl}/gamified-budgeting`;
-
-  const faqs = [
-    { q: 'Is this just badges?', a: 'No. kNexo uses missions, XP, streaks, and levels tied to real behaviors (spending caps, savings actions, reviews).' },
-    { q: 'Can couples play together?', a: 'Yes. Household missions and shared goals are built-in.' },
-  ];
-
-  return (
-    <div className="min-h-screen">
-      <Schema
-        json={productSchema(
-          pageUrl,
-          'kNexo Gamified Budgeting',
-          'A gamified budgeting app with missions, XP, streaks, and rewards — powered by AI and built for daily consistency.'
-        )}
-      />
-      <Schema json={faqSchema(pageUrl, faqs)} />
-
-      <Navbar ctaHref="#waitlist" />
-
-      <main>
         {/* Hero */}
-        <section className="relative overflow-hidden">
-          <div className="pointer-events-none absolute inset-0">
-            <div className="absolute -top-40 left-10 h-[520px] w-[520px] rounded-full bg-[#FECA57]/12 blur-3xl" />
-            <div className="absolute -bottom-40 right-10 h-[520px] w-[520px] rounded-full bg-[#6C5CE7]/22 blur-3xl" />
-          </div>
-
-          <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 md:grid-cols-2 md:px-6 md:py-20">
-            <div className="relative">
-              <div className="flex flex-wrap gap-2">
-                <Badge text="Missions" />
-                <Badge text="XP" />
-                <Badge text="Streaks" />
-                <Badge text="Levels" />
-                <Badge text="Rewards" />
+        <section className="pt-14 pb-10 md:pt-20">
+          <div className="grid gap-10 md:grid-cols-2 md:items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
+                <span className="h-2 w-2 rounded-full bg-[#FECA57] shadow-[0_0_18px_rgba(254,202,87,0.55)]" />
+                Missions • XP • Levels • Rewards
               </div>
 
-              <h1 className="mt-5 text-4xl font-semibold tracking-tight text-white md:text-5xl">
-                Turn saving into a <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FECA57] to-[#00D2D3]">game</span>.
+              <h1 className="h-hero mt-5 text-4xl font-extrabold leading-tight tracking-tight md:text-5xl">
+                Turn saving into a{" "}
+                <span className="bg-gradient-to-r from-[#FECA57] via-white to-[#00D2D3] bg-clip-text text-transparent">
+                  game you can win
+                </span>
+                .
               </h1>
-
-              <p className="mt-4 text-base leading-relaxed text-white/75 md:text-lg">
-                kNexo makes budgeting consistent with missions you can actually complete — plus XP, levels, and streaks that reinforce real money habits.
+              <p className="mt-4 text-base text-white/75 md:text-lg">
+                kNexo keeps you consistent with real missions and progression — powered by WhatsApp-first tracking and proactive AI insights.
               </p>
 
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <CTAButton href="#waitlist" variant="primary" eventParams={{ location: 'hero_gamification' }}>
-                  Join the waitlist
-                </CTAButton>
-                <p className="text-sm text-white/60">Designed for US & UK users.</p>
+              <div className="mt-7" id="waitlist">
+                <WaitlistForm source="gamification_page" buttonLabel="Join the waitlist" />
               </div>
             </div>
 
-            {/* Visual journey */}
+            {/* Visual: badges / XP / levels */}
             <div className="relative">
-              <div className="rounded-2xl border border-white/12 bg-white/[0.04] p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_30px_80px_rgba(0,0,0,0.45)]">
+              <div className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/10 to-white/5 p-6">
                 <div className="flex items-center justify-between">
-                  <div className="text-sm font-semibold text-white">Progress</div>
-                  <div className="text-xs text-white/55">Example</div>
+                  <div className="text-sm font-semibold">Progress preview</div>
+                  <div className="text-xs text-white/60">Placeholder</div>
                 </div>
 
-                <div className="mt-5 rounded-xl border border-white/10 bg-[#0A0A23]/35 p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="text-xs text-white/60">Level 4</div>
-                    <div className="text-xs font-semibold text-[#CFFBFB]">840 / 1200 XP</div>
-                  </div>
-                  <div className="mt-2 h-2 w-full rounded-full bg-white/8">
-                    <div className="h-2 w-[70%] rounded-full bg-gradient-to-r from-[#FECA57] via-[#6C5CE7] to-[#00D2D3]" />
-                  </div>
-
-                  <div className="mt-4 grid grid-cols-3 gap-3">
-                    {[
-                      { t: 'Streak', v: '8 days' },
-                      { t: 'Missions', v: '3 active' },
-                      { t: 'Rewards', v: '2 unlocked' },
-                    ].map((s) => (
-                      <div key={s.t} className="rounded-xl border border-white/10 bg-white/[0.04] p-3">
-                        <div className="text-xs text-white/55">{s.t}</div>
-                        <div className="text-sm font-semibold text-white">{s.v}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="mt-5 grid gap-3">
-                  {[
-                    { t: 'Mission: “No takeout Tuesday”', d: '+150 XP · Ends in 18h' },
-                    { t: 'Mission: “Review subscriptions”', d: '+250 XP · Find 1 cancel' },
-                    { t: 'Mission: “Weekly money check-in”', d: '+120 XP · 5 min' },
-                  ].map((m) => (
-                    <div key={m.t} className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
-                      <div className="text-sm font-semibold text-white">{m.t}</div>
-                      <div className="mt-1 text-xs text-white/60">{m.d}</div>
+                <div className="mt-5 grid gap-4">
+                  <div className="rounded-2xl border border-white/10 bg-[#0A0A23] p-4">
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="font-semibold">Level 7 — Budget Ranger</div>
+                      <div className="text-white/60">1,420 / 1,800 XP</div>
                     </div>
-                  ))}
-                </div>
+                    <div className="mt-3 h-2 rounded-full bg-white/10">
+                      <div className="h-2 w-[78%] rounded-full bg-gradient-to-r from-[#6C5CE7] to-[#00D2D3]" />
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <Badge label="3-day streak" />
+                      <Badge label="No-spend mission" />
+                      <Badge label="Weekly review" />
+                    </div>
+                  </div>
 
-                <div className="mt-4 text-xs text-white/45">
-                  {/* Visual: badges, XP bar, level card */}
+                  <div className="grid grid-cols-3 gap-3">
+                    <CardStat label="Missions" value="Daily" />
+                    <CardStat label="Rewards" value="Real" />
+                    <CardStat label="Insights" value="AI" />
+                  </div>
                 </div>
               </div>
+
+              <div className="pointer-events-none absolute -inset-6 -z-10 rounded-[2.5rem] bg-gradient-to-r from-[#FECA57]/18 via-transparent to-[#6C5CE7]/18 blur-2xl" />
             </div>
           </div>
         </section>
 
-        {/* Sections: how to earn points, levels, rewards */}
-        <section className="mx-auto max-w-6xl px-4 py-14 md:px-6">
-          <h2 className="text-2xl font-semibold tracking-tight text-white md:text-3xl">How you earn points</h2>
-          <p className="mt-2 text-sm text-white/70">Reward behaviors that actually move the needle.</p>
-
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {[
-              { t: 'Log spending consistently', d: 'Daily capture via WhatsApp builds awareness automatically.' },
-              { t: 'Complete missions', d: 'Small, winnable actions: caps, reviews, and habit swaps.' },
-              { t: 'Hit weekly goals', d: 'Savings goals and category caps that adapt to your life.' },
-            ].map((c) => (
-              <div key={c.t} className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-                <div className="text-base font-semibold text-white">{c.t}</div>
-                <p className="mt-2 text-sm text-white/70">{c.d}</p>
-              </div>
-            ))}
+        {/* How to earn points */}
+        <section className="py-12">
+          <h2 className="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">How you earn points</h2>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <Tile title="Log spending" desc="Every logged expense builds your timeline (+XP)." />
+            <Tile title="Complete missions" desc="No-spend days, caps, weekly reviews (+big XP)." />
+            <Tile title="Hit streaks" desc="Consistency multiplies progress and momentum." />
+            <Tile title="Improve categories" desc="Tighten one category for 7 days and level up." />
+            <Tile title="Household teamwork" desc="Shared missions for couples & families." />
+            <Tile title="AI challenges" desc="Proactive suggestions turn into optional quests." />
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-4 py-14 md:px-6">
-          <h2 className="text-2xl font-semibold tracking-tight text-white md:text-3xl">Levels & evolution</h2>
-          <p className="mt-2 text-sm text-white/70">A clear journey from chaotic to confident.</p>
-
-          <div className="mt-8 grid gap-4 lg:grid-cols-4">
-            {[
-              { t: 'Level 1: Starter', d: 'Track basics + first weekly review.' },
-              { t: 'Level 2: Builder', d: 'Set caps + complete 2 missions.' },
-              { t: 'Level 3: Defender', d: 'Protect savings + reduce leaks.' },
-              { t: 'Level 4+: Strategist', d: 'Optimize categories + proactive goals.' },
-            ].map((l) => (
-              <div key={l.t} className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-                <div className="text-sm font-semibold text-white">{l.t}</div>
-                <p className="mt-2 text-sm text-white/70">{l.d}</p>
-              </div>
-            ))}
+        {/* Levels */}
+        <section className="py-12">
+          <h2 className="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">Levels of evolution</h2>
+          <div className="mt-6 grid gap-4 md:grid-cols-4">
+            <Level name="Starter" perk="First budget + first mission" />
+            <Level name="Tracker" perk="Weekly caps + streaks" />
+            <Level name="Optimizer" perk="AI insights + smarter goals" />
+            <Level name="Hero" perk="Shared wins + long-term momentum" />
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-4 py-14 md:px-6">
-          <h2 className="text-2xl font-semibold tracking-tight text-white md:text-3xl">Rewards that keep it fun</h2>
-          <p className="mt-2 text-sm text-white/70">Placeholders — customize based on partnerships.</p>
-
+        {/* Rewards */}
+        <section className="py-12">
+          <h2 className="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">Rewards that reinforce habits</h2>
           <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {[
-              { t: 'Unlock themes & badges', d: 'Cosmetics that reflect progress — not pressure.' },
-              { t: 'Partner perks', d: 'Discounts or offers (future roadmap).' },
-              { t: 'Household rewards', d: 'Shared rewards for shared missions.' },
-            ].map((r) => (
-              <div key={r.t} className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-                <div className="text-base font-semibold text-white">{r.t}</div>
-                <p className="mt-2 text-sm text-white/70">{r.d}</p>
-              </div>
-            ))}
+            <Reward title="Unlock new missions" desc="Progress opens more tailored challenges." />
+            <Reward title="Streak boosts" desc="Consistency makes future missions easier to complete." />
+            <Reward title="Real-world perks" desc="Placeholder for partner perks/coupons at launch." />
+          </div>
+        </section>
+
+        {/* Journey visual */}
+        <section className="py-12">
+          <h2 className="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">Your journey</h2>
+          <div className="mt-6 rounded-3xl border border-white/10 bg-white/5 p-6">
+            <ol className="grid gap-4 md:grid-cols-4">
+              <JourneyStep title="Day 1" desc="Text 3 expenses → instant clarity" />
+              <JourneyStep title="Week 1" desc="Set caps + complete 1 mission" />
+              <JourneyStep title="Week 2" desc="AI finds patterns + saves you money" />
+              <JourneyStep title="Month 1" desc="Streaks + levels make it automatic" />
+            </ol>
           </div>
         </section>
 
         {/* CTA */}
-        <section className="mx-auto max-w-6xl px-4 pb-16 md:px-6">
-          <WaitlistForm
-            source="gamification_page"
-            headline="Get gamified budgeting that actually sticks"
-            description="Join the waitlist for missions, XP, streaks, and AI nudges — built for real life."
-          />
+        <section className="py-14">
+          <div className="rounded-3xl border border-white/10 bg-gradient-to-r from-white/10 to-white/5 p-7 md:p-10">
+            <div className="grid gap-8 md:grid-cols-2 md:items-center">
+              <div>
+                <h2 className="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">Ready to make money habits stick?</h2>
+                <p className="mt-3 text-white/70">Join the waitlist for US/UK launch updates and early access.</p>
+              </div>
+              <WaitlistForm source="gamification_page_bottom" buttonLabel="Join the waitlist" />
+            </div>
+          </div>
         </section>
       </main>
-
       <Footer />
     </div>
+  );
+}
+
+function Badge({ label }: { label: string }) {
+  return <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">{label}</span>;
+}
+function CardStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-3 text-center">
+      <div className="text-xs text-white/60">{label}</div>
+      <div className="mt-1 text-sm font-semibold">{value}</div>
+    </div>
+  );
+}
+function Tile({ title, desc }: { title: string; desc: string }) {
+  return (
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+      <div className="text-base font-semibold">{title}</div>
+      <p className="mt-2 text-sm text-white/70">{desc}</p>
+    </div>
+  );
+}
+function Level({ name, perk }: { name: string; perk: string }) {
+  return (
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+      <div className="text-sm font-semibold text-white">{name}</div>
+      <p className="mt-2 text-sm text-white/70">{perk}</p>
+    </div>
+  );
+}
+function Reward({ title, desc }: { title: string; desc: string }) {
+  return (
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+      <div className="text-base font-semibold">{title}</div>
+      <p className="mt-2 text-sm text-white/70">{desc}</p>
+    </div>
+  );
+}
+function JourneyStep({ title, desc }: { title: string; desc: string }) {
+  return (
+    <li className="rounded-2xl border border-white/10 bg-[#0A0A23] p-4">
+      <div className="text-sm font-semibold">{title}</div>
+      <div className="mt-2 text-sm text-white/70">{desc}</div>
+    </li>
   );
 }
