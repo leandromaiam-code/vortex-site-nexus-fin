@@ -1,80 +1,37 @@
-"use client";
-
 import * as React from "react";
-import Link from "next/link";
-import { cn } from "@/lib/cn";
-import { trackCtaClick } from "@/lib/track";
 
 type Variant = "primary" | "secondary" | "outline";
-
-const styles: Record<Variant, string> = {
-  primary:
-    "bg-gradient-to-r from-[#6C5CE7] via-[#7C6CFF] to-[#00D2D3] text-white shadow-[0_0_0_1px_rgba(255,255,255,0.12),0_20px_60px_-20px_rgba(108,92,231,0.75)] hover:opacity-95",
-  secondary:
-    "bg-white/10 text-white shadow-[0_0_0_1px_rgba(255,255,255,0.12)] hover:bg-white/15",
-  outline:
-    "bg-transparent text-white border border-white/15 hover:border-white/25 hover:bg-white/5",
-};
+type Size = "sm" | "md" | "lg";
 
 export function Button({
-  as = "button",
-  href,
-  onClick,
-  children,
+  asChild,
+  className,
   variant = "primary",
   size = "md",
-  className,
-  ariaLabel,
-  eventName,
-}: {
-  as?: "button" | "link";
-  href?: string;
-  onClick?: () => void;
-  children: React.ReactNode;
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  asChild?: boolean;
   variant?: Variant;
-  size?: "sm" | "md" | "lg";
-  className?: string;
-  ariaLabel?: string;
-  eventName?: string;
+  size?: Size;
 }) {
   const base =
-    "inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00D2D3]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A23]";
-  const sizes =
-    size === "sm"
-      ? "px-3 py-2 text-sm"
-      : size === "lg"
-        ? "px-6 py-3.5 text-base"
-        : "px-4 py-2.5 text-sm md:text-base";
+    "inline-flex items-center justify-center rounded-xl font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00D2D3]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#07071a] disabled:opacity-60 disabled:pointer-events-none";
+  const sizes: Record<Size, string> = {
+    sm: "h-9 px-3 text-sm",
+    md: "h-11 px-4 text-sm",
+    lg: "h-12 px-5 text-base",
+  };
+  const variants: Record<Variant, string> = {
+    primary:
+      "bg-gradient-to-r from-[#6C5CE7] via-[#8B7BFF] to-[#00D2D3] text-[#060616] shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_18px_50px_rgba(108,92,231,0.25)] hover:brightness-110",
+    secondary:
+      "bg-white/10 text-white shadow-[0_0_0_1px_rgba(255,255,255,0.10)] hover:bg-white/14",
+    outline:
+      "bg-transparent text-white shadow-[0_0_0_1px_rgba(255,255,255,0.18)] hover:bg-white/8",
+  };
 
-  const cls = cn(base, sizes, styles[variant], className);
-
-  if (as === "link" && href) {
-    return (
-      <Link
-        href={href}
-        className={cls}
-        aria-label={ariaLabel}
-        onClick={() => {
-          trackCtaClick(eventName || "cta_click", { href, variant });
-          onClick?.();
-        }}
-      >
-        {children}
-      </Link>
-    );
-  }
-
+  // asChild not implemented (no Radix). Keep simple.
   return (
-    <button
-      className={cls}
-      aria-label={ariaLabel}
-      onClick={() => {
-        trackCtaClick(eventName || "cta_click", { variant });
-        onClick?.();
-      }}
-      type="button"
-    >
-      {children}
-    </button>
+    <button className={[base, sizes[size], variants[variant], className].filter(Boolean).join(" ")} {...props} />
   );
 }

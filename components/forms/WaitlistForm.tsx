@@ -2,153 +2,89 @@
 
 import * as React from "react";
 import { Button } from "@/components/ui/Button";
-import { trackWaitlistSignup } from "@/lib/track";
+import { insertWaitlist } from "@/lib/supabaseWaitlist";
+import { trackWaitlistSignup } from "@/lib/tracking";
 
-type Props = {
-  source: string; // page identifier
-  buttonLabel?: string;
-};
+function isValidEmail(email: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
 
-export function WaitlistForm({ source, buttonLabel = "Join the waitlist" }: Props) {
+export function WaitlistForm({
+  market = "INTL",
+  sourcePage = "unknown",
+  persona,
+  headline = "Join the waitlist",
+  subcopy = "Get early access + launch perks. No spam.",
+}: {
+  market?: "US" | "UK" | "INTL";
+  sourcePage?: string;
+  persona?: string;
+  headline?: string;
+  subcopy?: string;
+}) {
   const [email, setEmail] = React.useState("");
-  const [country, setCountry] = React.useState<string>("US");
-  const [loading, setLoading] = React.useState(false);
-  const [status, setStatus] = React.useState<"idle" | "ok" | "error">("idle");
-  const [message, setMessage] = React.useState<string>("");
+  const [status, setStatus] = React.useState<"idle" | "loading" | "success" | "error">("idle");
+  const [error, setError] = React.useState<string | null>(null);
 
-  async function submit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setStatus("idle");
-    setMessage("");
+    setError(null);
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-    if (!supabaseUrl || !anonKey) {
+    if (!isValidEmail(email)) {
       setStatus("error");
-      setMessage("Missing Supabase env vars. Please configure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.");
+      setError("Please enter a valid email.");
       return;
     }
 
-    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
-      setStatus("error");
-      setMessage("Please enter a valid email.");
-      return;
-    }
-
-    setLoading(true);
+    setStatus("loading");
     try {
-      const res = await fetch(`${supabaseUrl}/rest/v1/waitlist`, {
-        method: "POST",
-        headers: {
-          apikey: anonKey,
-          Authorization: `Bearer ${anonKey}`,
-          "Content-Type": "application/json",
-          Prefer: "return=representation",
-        },
-        body: JSON.stringify([
-          {
-            email,
-            country,
-            source,
-            created_at: new Date().toISOString(),
-            user_agent: typeof navigator !== "undefined" ? navigator.userAgent : null,
-            referrer: typeof document !== "undefined" ? document.referrer : null,
-            utm_source: getParam("utm_source"),
-            utm_medium: getParam("utm_medium"),
-            utm_campaign: getParam("utm_campaign"),
-            utm_term: getParam("utm_term"),
-            utm_content: getParam("utm_content"),
-          },
-        ]),
-      });
-
-      if (!res.ok) {
-        const txt = await res.text();
-        throw new Error(txt || "Request failed");
-      }
-
-      setStatus("ok");
-      setMessage("You're on the list. We'll email you early access.");
-      trackWaitlistSignup({ source, country });
-      setEmail("");
+      await insertWaitlist({ email, market, source_page: sourcePage, persona });
+      trackWaitlistSignup({ market, sourcePage, persona });
+      setStatus("success");
     } catch (err: any) {
       setStatus("error");
-      setMessage("Something went wrong. Try again in a moment.");
+      setError("Something went wrong. Please try again.");
       // Optional: console for debugging
-      console.error(err);
-    } finally {
-      setLoading(false);
+      console.error(err?.message || err);
     }
   }
 
   return (
-    <form onSubmit={submit} className="w-full">
-      <div className="grid gap-3 md:grid-cols-[1fr_140px_190px]">
-        <label className="sr-only" htmlFor={`email-${source}`}>
-          Email
-        </label>
-        <input
-          id={`email-${source}`}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@email.com"
-          inputMode="email"
-          autoComplete="email"
-          className="h-12 w-full rounded-xl bg-white/5 px-4 text-sm text-white placeholder:text-white/40 ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-[#00D2D3]/60"
-          aria-label="Email address"
-        />
+    <div className="rounded-2xl border border-white/12 bg-white/6 p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_24px_80px_rgba(0,0,0,0.45)]">
+      <div className="text-lg font-semibold text-white">{headline}</div>
+      <div className="mt-1 text-sm text-white/65">{subcopy}</div>
 
-        <label className="sr-only" htmlFor={`country-${source}`}>
-          Country
-        </label>
-        <select
-          id={`country-${source}`}
-          value={country}
-          onChange={(e) => setCountry(e.target.value)}
-          className="h-12 w-full rounded-xl bg-white/5 px-3 text-sm text-white ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-[#00D2D3]/60"
-          aria-label="Country"
-        >
-          <option value="US">US</option>
-          <option value="UK">UK</option>
-        </select>
-
-        <Button
-          as="button"
-          variant="primary"
-          size="md"
-          className="h-12"
-          ariaLabel={buttonLabel}
-          eventName="cta_click_waitlist"
-          onClick={() => {}}
-        >
-          {loading ? "Joining..." : buttonLabel}
-        </Button>
-      </div>
-
-      <p className="mt-3 text-xs text-white/60">
-        No spam. Early access + launch perks. By joining, you agree to receive product updates.
-      </p>
-
-      {status !== "idle" ? (
-        <div
-          className={`mt-3 rounded-xl border px-4 py-3 text-sm ${
-            status === "ok"
-              ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-100"
-              : "border-rose-400/20 bg-rose-400/10 text-rose-100"
-          }`}
-          role="status"
-          aria-live="polite"
-        >
-          {message}
+      {status === "success" ? (
+        <div className="mt-4 rounded-xl bg-emerald-500/15 px-4 py-3 text-sm text-emerald-200">
+          You’re on the list. We’ll email you when kNexo opens.
         </div>
-      ) : null}
-    </form>
-  );
-}
+      ) : (
+        <form className="mt-4 flex flex-col gap-3 sm:flex-row" onSubmit={onSubmit}>
+          <label className="sr-only" htmlFor="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            inputMode="email"
+            autoComplete="email"
+            placeholder="you@domain.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="h-12 w-full flex-1 rounded-xl border border-white/12 bg-[#07071a]/40 px-4 text-sm text-white placeholder:text-white/45 shadow-inner focus:border-[#00D2D3]/60"
+            aria-label="Email address"
+          />
+          <Button type="submit" size="lg" disabled={status === "loading"} aria-label="Join the waitlist">
+            {status === "loading" ? "Joining..." : "Join the waitlist"}
+          </Button>
+        </form>
+      )}
 
-function getParam(key: string) {
-  if (typeof window === "undefined") return null;
-  const v = new URLSearchParams(window.location.search).get(key);
-  return v ? v : null;
+      {status === "error" && error && (
+        <div className="mt-3 text-sm text-red-200">{error}</div>
+      )}
+
+      <div className="mt-3 text-xs text-white/50">
+        By joining, you agree to receive product updates. Unsubscribe anytime.
+      </div>
+    </div>
+  );
 }

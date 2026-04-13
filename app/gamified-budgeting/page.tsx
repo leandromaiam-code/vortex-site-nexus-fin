@@ -1,207 +1,271 @@
-import { Navbar } from "@/components/shared/Navbar";
-import { Footer } from "@/components/shared/Footer";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Navbar } from "@/components/site/Navbar";
+import { Footer } from "@/components/site/Footer";
 import { WaitlistForm } from "@/components/forms/WaitlistForm";
-import { buildMetadata, FaqJsonLd, OrganizationJsonLd, ProductJsonLd } from "@/lib/seo";
+import { Button } from "@/components/ui/Button";
 
-export const metadata = buildMetadata({
+export const metadata: Metadata = {
   title: "kNexo Gamified Budgeting — Turn Saving into a Game (US/UK)",
   description:
-    "A gamified budgeting app with missions, XP, levels, streaks, and rewards. Build money habits that stick — powered by WhatsApp-first tracking and AI insights.",
-  path: "/gamified-budgeting",
-});
+    "A gamified budgeting app with missions, XP, levels, streaks, and rewards—powered by proactive AI insights. Join the kNexo waitlist.",
+  alternates: { canonical: "/gamified-budgeting" },
+  openGraph: {
+    title: "kNexo Gamified Budgeting",
+    description: "Turn saving into a game with missions, XP, levels, and rewards. Join the waitlist.",
+    url: "/gamified-budgeting",
+    images: [{ url: "/og/knexo-og.png", width: 1200, height: 630, alt: "kNexo Gamified Budgeting" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "kNexo Gamified Budgeting",
+    description: "Missions, XP, levels, streaks—join the waitlist.",
+    images: ["/og/knexo-og.png"],
+  },
+};
 
 export default function GamificationPage() {
   return (
-    <div className="min-h-dvh">
+    <div>
       <Navbar ctaHref="#waitlist" ctaLabel="Join the waitlist" />
-      <main className="mx-auto max-w-6xl px-4 md:px-6">
-        <OrganizationJsonLd />
-        <ProductJsonLd
-          name="kNexo Gamified Budgeting"
-          description="Gamified budgeting with missions, XP, levels, streaks, and rewards — powered by WhatsApp-first AI."
-        />
-        <FaqJsonLd
-          faqs={[
-            {
-              question: "What makes kNexo a gamified budgeting app?",
-              answer:
-                "kNexo uses missions, XP, levels, streaks, and rewards tied to real money behaviors (like weekly caps and no-spend challenges).",
-            },
-            {
-              question: "Is it just badges?",
-              answer:
-                "No. The system is designed as a habit loop: clear missions, immediate feedback, and progression that reinforces consistency.",
-            },
-          ]}
-        />
 
+      <main>
         {/* Hero */}
-        <section className="pt-14 pb-10 md:pt-20">
-          <div className="grid gap-10 md:grid-cols-2 md:items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
-                <span className="h-2 w-2 rounded-full bg-[#FECA57] shadow-[0_0_18px_rgba(254,202,87,0.55)]" />
-                Missions • XP • Levels • Rewards
+        <section className="relative overflow-hidden">
+          <div className="absolute inset-0">
+            <div className="absolute -top-44 left-1/2 h-[560px] w-[560px] -translate-x-1/2 rounded-full bg-[#FECA57]/14 blur-3xl" />
+            <div className="absolute -bottom-48 left-0 h-[520px] w-[520px] rounded-full bg-[#6C5CE7]/25 blur-3xl" />
+            <div className="absolute -bottom-48 right-0 h-[520px] w-[520px] rounded-full bg-[#00D2D3]/16 blur-3xl" />
+          </div>
+
+          <div className="relative mx-auto max-w-6xl px-4 py-16 md:py-20">
+            <div className="grid gap-10 md:grid-cols-2 md:items-center">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/6 px-3 py-1 text-xs text-white/70">
+                  <span className="h-2 w-2 rounded-full bg-[#FECA57]" />
+                  Real gamification loop
+                </div>
+
+                <h1 className="mt-5 text-4xl font-semibold tracking-tight md:text-5xl">
+                  Turn saving into a{" "}
+                  <span className="bg-gradient-to-r from-[#FECA57] via-white to-[#00D2D3] bg-clip-text text-transparent">
+                    game you actually keep playing.
+                  </span>
+                </h1>
+
+                <p className="mt-4 text-base text-white/70 md:text-lg">
+                  Missions, XP, levels, streaks, and rewards—designed to build habits. Powered by proactive AI that adapts missions to your spending patterns.
+                </p>
+
+                <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                  <Link href="#waitlist">
+                    <Button size="lg">Join the waitlist</Button>
+                  </Link>
+                  <Link href="/whatsapp-expense-tracker">
+                    <Button size="lg" variant="outline">See WhatsApp flow</Button>
+                  </Link>
+                </div>
               </div>
 
-              <h1 className="h-hero mt-5 text-4xl font-extrabold leading-tight tracking-tight md:text-5xl">
-                Turn saving into a{" "}
-                <span className="bg-gradient-to-r from-[#FECA57] via-white to-[#00D2D3] bg-clip-text text-transparent">
-                  game you can win
-                </span>
-                .
-              </h1>
-              <p className="mt-4 text-base text-white/75 md:text-lg">
-                kNexo keeps you consistent with real missions and progression — powered by WhatsApp-first tracking and proactive AI insights.
-              </p>
-
-              <div className="mt-7" id="waitlist">
-                <WaitlistForm source="gamification_page" buttonLabel="Join the waitlist" />
-              </div>
-            </div>
-
-            {/* Visual: badges / XP / levels */}
-            <div className="relative">
-              <div className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/10 to-white/5 p-6">
+              {/* Game UI visual */}
+              <div className="rounded-3xl border border-white/12 bg-gradient-to-b from-white/10 to-white/4 p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_30px_120px_rgba(0,0,0,0.55)]">
                 <div className="flex items-center justify-between">
-                  <div className="text-sm font-semibold">Progress preview</div>
-                  <div className="text-xs text-white/60">Placeholder</div>
+                  <div className="text-sm font-semibold text-white/90">Progress (mock)</div>
+                  <div className="text-xs text-white/55">Level 8</div>
                 </div>
 
-                <div className="mt-5 grid gap-4">
-                  <div className="rounded-2xl border border-white/10 bg-[#0A0A23] p-4">
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="font-semibold">Level 7 — Budget Ranger</div>
-                      <div className="text-white/60">1,420 / 1,800 XP</div>
-                    </div>
-                    <div className="mt-3 h-2 rounded-full bg-white/10">
-                      <div className="h-2 w-[78%] rounded-full bg-gradient-to-r from-[#6C5CE7] to-[#00D2D3]" />
-                    </div>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <Badge label="3-day streak" />
-                      <Badge label="No-spend mission" />
-                      <Badge label="Weekly review" />
-                    </div>
+                <div className="mt-4 rounded-2xl bg-white/6 p-4">
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="text-white/75">XP</div>
+                    <div className="font-semibold">1,840 / 2,000</div>
                   </div>
+                  <div className="mt-3 h-3 w-full rounded-full bg-white/10">
+                    <div className="h-3 w-[92%] rounded-full bg-gradient-to-r from-[#6C5CE7] to-[#00D2D3]" />
+                  </div>
+                  <div className="mt-2 text-xs text-white/55">92% to Level 9</div>
+                </div>
 
-                  <div className="grid grid-cols-3 gap-3">
-                    <CardStat label="Missions" value="Daily" />
-                    <CardStat label="Rewards" value="Real" />
-                    <CardStat label="Insights" value="AI" />
-                  </div>
+                <div className="mt-4 grid grid-cols-3 gap-3">
+                  {[
+                    { t: "Streak", v: "6 days" },
+                    { t: "Missions", v: "3 active" },
+                    { t: "Rewards", v: "2 unlocked" },
+                  ].map((x) => (
+                    <div key={x.t} className="rounded-2xl bg-white/6 p-3">
+                      <div className="text-xs text-white/55">{x.t}</div>
+                      <div className="mt-1 text-sm font-semibold">{x.v}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-4 rounded-2xl border border-white/12 bg-[#FECA57]/10 p-4">
+                  <div className="text-sm font-semibold">Today’s mission</div>
+                  <div className="mt-1 text-sm text-white/75">“No delivery” — save $15+ today.</div>
+                  <div className="mt-2 text-xs text-white/60">Reward: +50 XP • Badge: “Discipline”</div>
+                </div>
+
+                <div className="mt-4 text-xs text-white/45">
+                  {/* Hero visual placeholder */}
+                  Badges/XP/levels UI mockup (placeholder).
                 </div>
               </div>
-
-              <div className="pointer-events-none absolute -inset-6 -z-10 rounded-[2.5rem] bg-gradient-to-r from-[#FECA57]/18 via-transparent to-[#6C5CE7]/18 blur-2xl" />
             </div>
           </div>
         </section>
 
-        {/* How to earn points */}
-        <section className="py-12">
-          <h2 className="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">How you earn points</h2>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <Tile title="Log spending" desc="Every logged expense builds your timeline (+XP)." />
-            <Tile title="Complete missions" desc="No-spend days, caps, weekly reviews (+big XP)." />
-            <Tile title="Hit streaks" desc="Consistency multiplies progress and momentum." />
-            <Tile title="Improve categories" desc="Tighten one category for 7 days and level up." />
-            <Tile title="Household teamwork" desc="Shared missions for couples & families." />
-            <Tile title="AI challenges" desc="Proactive suggestions turn into optional quests." />
+        {/* Sections: how to earn points, levels, rewards */}
+        <section className="mx-auto max-w-6xl px-4 py-14">
+          <h2 className="text-2xl font-semibold tracking-tight">How you earn points</h2>
+          <p className="mt-2 text-sm text-white/65">A habit loop that rewards the actions that matter.</p>
+
+          <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {[
+              { t: "Log spending", d: "+5 XP per day when you keep the habit alive." },
+              { t: "Complete missions", d: "+30–100 XP depending on difficulty and consistency." },
+              { t: "Hit weekly goals", d: "Stack bonuses for staying under target categories." },
+              { t: "Build streaks", d: "Streak multipliers reward consistency (not perfection)." },
+              { t: "Team up (couples/family)", d: "Shared missions unlock co-op rewards." },
+              { t: "Reflect & improve", d: "Weekly review prompts earn XP and improve AI coaching." },
+            ].map((i) => (
+              <div key={i.t} className="rounded-2xl border border-white/12 bg-white/6 p-5">
+                <div className="text-base font-semibold">{i.t}</div>
+                <p className="mt-1 text-sm text-white/65">{i.d}</p>
+              </div>
+            ))}
           </div>
         </section>
 
-        {/* Levels */}
-        <section className="py-12">
-          <h2 className="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">Levels of evolution</h2>
-          <div className="mt-6 grid gap-4 md:grid-cols-4">
-            <Level name="Starter" perk="First budget + first mission" />
-            <Level name="Tracker" perk="Weekly caps + streaks" />
-            <Level name="Optimizer" perk="AI insights + smarter goals" />
-            <Level name="Hero" perk="Shared wins + long-term momentum" />
+        <section className="mx-auto max-w-6xl px-4 pb-14">
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="rounded-3xl border border-white/12 bg-gradient-to-b from-white/10 to-white/4 p-6">
+              <h3 className="text-xl font-semibold tracking-tight">Levels of evolution</h3>
+              <p className="mt-2 text-sm text-white/65">Progress from “Starter” to “Strategist” with clear milestones.</p>
+
+              <div className="mt-5 space-y-3">
+                {[
+                  { lvl: "Level 1–3", name: "Starter", note: "Log consistently. Learn your baseline." },
+                  { lvl: "Level 4–6", name: "Builder", note: "Complete missions. Reduce leaks." },
+                  { lvl: "Level 7–9", name: "Optimizer", note: "Proactive insights + category goals." },
+                  { lvl: "Level 10+", name: "Strategist", note: "Shared goals, long-term planning, rewards." },
+                ].map((l) => (
+                  <div key={l.lvl} className="rounded-2xl bg-white/6 p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm font-semibold">{l.name}</div>
+                      <div className="text-xs text-white/55">{l.lvl}</div>
+                    </div>
+                    <div className="mt-1 text-sm text-white/70">{l.note}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-white/12 bg-gradient-to-b from-white/10 to-white/4 p-6">
+              <h3 className="text-xl font-semibold tracking-tight">Rewards that reinforce habits</h3>
+              <p className="mt-2 text-sm text-white/65">Rewards are optional, but motivation isn’t.</p>
+
+              <div className="mt-5 grid gap-3">
+                {[
+                  { t: "Achievement badges", d: "Meaningful milestones tied to real outcomes." },
+                  { t: "Streak boosts", d: "Momentum mechanics to keep you consistent." },
+                  { t: "Unlockable missions", d: "New challenges as you level up." },
+                  { t: "Partner/family co-op", d: "Shared wins that reduce money stress." },
+                ].map((r) => (
+                  <div key={r.t} className="rounded-2xl bg-white/6 p-4">
+                    <div className="text-sm font-semibold">{r.t}</div>
+                    <div className="mt-1 text-sm text-white/70">{r.d}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* Rewards */}
-        <section className="py-12">
-          <h2 className="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">Rewards that reinforce habits</h2>
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            <Reward title="Unlock new missions" desc="Progress opens more tailored challenges." />
-            <Reward title="Streak boosts" desc="Consistency makes future missions easier to complete." />
-            <Reward title="Real-world perks" desc="Placeholder for partner perks/coupons at launch." />
-          </div>
-        </section>
+        {/* Journey/progress visual */}
+        <section className="mx-auto max-w-6xl px-4 pb-14">
+          <h2 className="text-2xl font-semibold tracking-tight">Your journey (visual)</h2>
+          <p className="mt-2 text-sm text-white/65">A simple roadmap from logging to mastery.</p>
 
-        {/* Journey visual */}
-        <section className="py-12">
-          <h2 className="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">Your journey</h2>
-          <div className="mt-6 rounded-3xl border border-white/10 bg-white/5 p-6">
-            <ol className="grid gap-4 md:grid-cols-4">
-              <JourneyStep title="Day 1" desc="Text 3 expenses → instant clarity" />
-              <JourneyStep title="Week 1" desc="Set caps + complete 1 mission" />
-              <JourneyStep title="Week 2" desc="AI finds patterns + saves you money" />
-              <JourneyStep title="Month 1" desc="Streaks + levels make it automatic" />
-            </ol>
+          <div className="mt-6 rounded-3xl border border-white/12 bg-white/6 p-6">
+            <div className="grid gap-4 md:grid-cols-4">
+              {[
+                { t: "Log", d: "Message spending daily" },
+                { t: "Understand", d: "AI finds patterns" },
+                { t: "Act", d: "Missions + nudges" },
+                { t: "Win", d: "Levels + rewards" },
+              ].map((x, idx) => (
+                <div key={x.t} className="relative rounded-2xl bg-[#07071a]/35 p-4 shadow-inner">
+                  <div className="text-xs text-white/55">Stage {idx + 1}</div>
+                  <div className="mt-1 text-base font-semibold">{x.t}</div>
+                  <div className="mt-1 text-sm text-white/65">{x.d}</div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-5 h-2 w-full rounded-full bg-white/10">
+              <div className="h-2 w-[55%] rounded-full bg-gradient-to-r from-[#FECA57] via-[#6C5CE7] to-[#00D2D3]" />
+            </div>
+            <div className="mt-2 text-xs text-white/55">Example progress bar (placeholder).</div>
           </div>
         </section>
 
         {/* CTA */}
-        <section className="py-14">
-          <div className="rounded-3xl border border-white/10 bg-gradient-to-r from-white/10 to-white/5 p-7 md:p-10">
+        <section id="waitlist" className="mx-auto max-w-6xl px-4 pb-20">
+          <div className="rounded-3xl border border-white/12 bg-gradient-to-b from-white/10 to-white/4 p-6 md:p-10">
             <div className="grid gap-8 md:grid-cols-2 md:items-center">
               <div>
-                <h2 className="h-hero text-2xl font-extrabold tracking-tight md:text-3xl">Ready to make money habits stick?</h2>
-                <p className="mt-3 text-white/70">Join the waitlist for US/UK launch updates and early access.</p>
+                <h2 className="text-3xl font-semibold tracking-tight">Want budgeting that actually sticks?</h2>
+                <p className="mt-3 text-sm text-white/70">Join the waitlist for missions, XP, and proactive AI coaching.</p>
               </div>
-              <WaitlistForm source="gamification_page_bottom" buttonLabel="Join the waitlist" />
+              <WaitlistForm market="INTL" sourcePage="/gamified-budgeting" persona="gamification" />
             </div>
           </div>
         </section>
       </main>
-      <Footer />
-    </div>
-  );
-}
 
-function Badge({ label }: { label: string }) {
-  return <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">{label}</span>;
-}
-function CardStat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-3 text-center">
-      <div className="text-xs text-white/60">{label}</div>
-      <div className="mt-1 text-sm font-semibold">{value}</div>
+      <Footer />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            {
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Product",
+                  name: "kNexo Gamified Budgeting",
+                  description:
+                    "Gamified budgeting with missions, XP, levels, streaks, and rewards—powered by proactive AI insights.",
+                  brand: { "@type": "Brand", name: "kNexo" },
+                },
+                {
+                  "@type": "FAQPage",
+                  mainEntity: [
+                    {
+                      "@type": "Question",
+                      name: "What is gamified budgeting?",
+                      acceptedAnswer: {
+                        "@type": "Answer",
+                        text: "Gamified budgeting uses missions, points (XP), levels, and streaks to make money habits consistent and rewarding.",
+                      },
+                    },
+                    {
+                      "@type": "Question",
+                      name: "Does kNexo have real rewards?",
+                      acceptedAnswer: {
+                        "@type": "Answer",
+                        text: "kNexo focuses on habit reinforcement with missions, XP, levels, and unlocks. Reward systems may evolve during launch.",
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+            null,
+            2
+          ),
+        }}
+      />
     </div>
-  );
-}
-function Tile({ title, desc }: { title: string; desc: string }) {
-  return (
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-      <div className="text-base font-semibold">{title}</div>
-      <p className="mt-2 text-sm text-white/70">{desc}</p>
-    </div>
-  );
-}
-function Level({ name, perk }: { name: string; perk: string }) {
-  return (
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-      <div className="text-sm font-semibold text-white">{name}</div>
-      <p className="mt-2 text-sm text-white/70">{perk}</p>
-    </div>
-  );
-}
-function Reward({ title, desc }: { title: string; desc: string }) {
-  return (
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-      <div className="text-base font-semibold">{title}</div>
-      <p className="mt-2 text-sm text-white/70">{desc}</p>
-    </div>
-  );
-}
-function JourneyStep({ title, desc }: { title: string; desc: string }) {
-  return (
-    <li className="rounded-2xl border border-white/10 bg-[#0A0A23] p-4">
-      <div className="text-sm font-semibold">{title}</div>
-      <div className="mt-2 text-sm text-white/70">{desc}</div>
-    </li>
   );
 }
